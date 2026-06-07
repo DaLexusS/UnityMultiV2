@@ -1137,6 +1137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1164858880}
   - component: {fileID: 1164858879}
+  - component: {fileID: 1164858881}
   m_Layer: 0
   m_Name: ChatSender
   m_TagString: Untagged
@@ -1173,6 +1174,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1164858881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164858878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b5780731be3d834aa349aa2927663c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChatUIManager
+  messageField: {fileID: 1579113419}
 --- !u!1 &1264947641
 GameObject:
   m_ObjectHideFlags: 0

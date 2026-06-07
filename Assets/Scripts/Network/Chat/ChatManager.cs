@@ -27,7 +27,7 @@ public class ChatManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ReceiveMessageAll(PlayerRef sender, string message)
     {
-        Debug.Log($"{sender} says {message}");
+        ChatUIManager.Instance.AddMessage(sender, message);
     }
     
    

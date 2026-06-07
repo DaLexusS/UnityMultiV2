@@ -9,7 +9,6 @@ public class MessageSendMechanism : MonoBehaviour
     [SerializeField] private TMP_InputField field;
     [SerializeField] private NetworkRunner networkRunner;
     
-
     public void SendMessage()
     {
         if (ChatManager.Instance == null)
