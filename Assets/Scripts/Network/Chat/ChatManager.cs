@@ -12,9 +12,9 @@ public class ChatManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_SendMessageToServer(PlayerRef sender, PlayerRef targetPlayer, string message, bool sendToAll)
+    public void RPC_SendMessageToServer(PlayerRef sender, PlayerRef targetPlayer, string message)
     {
-        if (sendToAll)
+        if (targetPlayer == PlayerRef.None)
         {
             RPC_ReceiveMessageAll(sender, message);
         }
@@ -34,6 +34,6 @@ public class ChatManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ReceiveMessagePersonal( [RpcTarget] PlayerRef targetPlayer, PlayerRef sender, string message)
     {
-        Debug.Log($"{sender} says {message} to {targetPlayer}");
+        ChatUIManager.Instance.AddMessage(sender, message);
     }
 }

@@ -6,6 +6,7 @@ public class ChatUIManager : MonoBehaviour
 {
    public static ChatUIManager Instance { get; private set; }
    
+   
    [SerializeField] private TextMeshProUGUI messageField;
 
    private void Awake()

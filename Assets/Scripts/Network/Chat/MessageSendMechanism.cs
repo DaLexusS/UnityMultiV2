@@ -8,6 +8,7 @@ public class MessageSendMechanism : MonoBehaviour
 {
     [SerializeField] private TMP_InputField field;
     [SerializeField] private NetworkRunner networkRunner;
+    [SerializeField] private TargetPlayerDropdown _targetPlayerDropdown;
     
     public void SendMessage()
     {
@@ -17,6 +18,9 @@ public class MessageSendMechanism : MonoBehaviour
             return;
         }
 
-        ChatManager.Instance.RPC_SendMessageToServer(networkRunner.LocalPlayer, PlayerRef.None, field.text, true);
+        PlayerRef target = _targetPlayerDropdown.TargetPlayer;
+        PlayerRef sender = networkRunner.LocalPlayer;
+        
+        ChatManager.Instance.RPC_SendMessageToServer(sender, target , field.text);
     }
 }
