@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8535389908086721183}
   - component: {fileID: 1063804138409523567}
   - component: {fileID: 3186761820019717015}
+  - component: {fileID: 4805885757013661164}
   m_Layer: 0
   m_Name: char4
   m_TagString: Untagged
@@ -136,6 +137,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 1063804138409523567}
   - {fileID: 3186761820019717015}
+  - {fileID: 4805885757013661164}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &1063804138409523567
 MonoBehaviour:
@@ -167,3 +169,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   speed: 5
+--- !u!114 &4805885757013661164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585167409772273043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b0e2ff07c1bb394095acce68f814b1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterObjectSpawner
+  objectPrefab: {fileID: 8133964774297652096, guid: c9c1be2073a49b64b9b33492807fcd72, type: 3}

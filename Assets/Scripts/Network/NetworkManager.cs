@@ -54,7 +54,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.Shared,
             SessionName = sessionName,
-            PlayerCount = 4,
+            PlayerCount = 10,
             OnGameStarted = OnGameStarted,
             CustomLobbyName = networkRunner.SessionInfo.Name,
         });
