@@ -2965,71 +2965,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1731333358}
   m_CullTransparentMesh: 1
---- !u!1 &1809471255
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1809471258}
-  - component: {fileID: 1809471257}
-  - component: {fileID: 1809471256}
-  m_Layer: 0
-  m_Name: CharacterSelectionNetworkManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1809471256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1809471255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7f2cc32ecf176e43b4b48f6ff47c278, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterSelectionNetworkManager
-  _TakenCharacters: 
---- !u!114 &1809471257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1809471255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 2951516346
-  ObjectInterest: 1
-  Flags: 131073
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 1809471256}
-  ForceRemoteRenderTimeframe: 0
---- !u!4 &1809471258
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1809471255}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.94085, y: -0, z: 0.67567}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1890399733
 GameObject:
   m_ObjectHideFlags: 0
@@ -3615,6 +3550,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSelectUI
   statusText: {fileID: 226352111}
+  characterButtons:
+  - {fileID: 1352408385}
+  - {fileID: 2131136893}
+  - {fileID: 425008371}
+  - {fileID: 742064726}
+  - {fileID: 409353712}
+  - {fileID: 1731333360}
+  - {fileID: 577661563}
+  - {fileID: 1612943560}
+  - {fileID: 220960252}
+  - {fileID: 1890399735}
 --- !u!1 &2131136891
 GameObject:
   m_ObjectHideFlags: 0
@@ -3757,4 +3703,3 @@ SceneRoots:
   - {fileID: 642694633}
   - {fileID: 109382637}
   - {fileID: 2054614501}
-  - {fileID: 1809471258}
