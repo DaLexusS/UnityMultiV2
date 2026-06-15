@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: LobbyConfig
   m_EditorClassIdentifier: 
   LobbyAmount: 3
-  MaxPlayersInLobby: 4
+  MaxPlayersInLobby: 10

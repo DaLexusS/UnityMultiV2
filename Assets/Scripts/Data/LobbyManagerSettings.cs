@@ -7,7 +7,7 @@ public class LobbyManagerSettings : ScriptableObject
     [SerializeField]
     private int LobbyAmount = 2;
 
-    [Range(1, 4)]
+    [Range(1, 10)]
     [SerializeField]
-    private int MaxPlayersInLobby = 4;
+    private int MaxPlayersInLobby = 10;
 }

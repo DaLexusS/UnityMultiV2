@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] NetworkRunner networkRunner;
+    [SerializeField] private NetworkSceneManagerDefault sceneManager;
     public static UnityAction onJoinedLobby;
     public static UnityAction<bool> onNoSessionsActive;
     public static UnityAction<bool> onHostCheck;
@@ -20,13 +21,14 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         LobbyItemHandler.onLobbyJoined += JoinLobby;
         SessionListUiHandler.onSessionCreated += StartSession;
         SessionInfoListUiItem.onSessionJoin += StartSession;
+        SessionListUiHandler.onHostStartedGame += StartMatch;
     }
     private void OnDisable()
     {
         LobbyItemHandler.onLobbyJoined -= JoinLobby;
         SessionListUiHandler.onSessionCreated -= StartSession;
         SessionInfoListUiItem.onSessionJoin -= StartSession;
-
+        SessionListUiHandler.onHostStartedGame -= StartMatch;
     }
 
     private void Start()
@@ -48,16 +50,30 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             Debug.Log("couldn't connect the lobby");
         }
     }
-    public void StartSession(string sessionName)
+    public async void StartSession(string sessionName)
     {
-        networkRunner.StartGame(new StartGameArgs()
+        var result = await networkRunner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             SessionName = sessionName,
-            PlayerCount = 4,
+            PlayerCount = 10,
             OnGameStarted = OnGameStarted,
             CustomLobbyName = networkRunner.SessionInfo.Name,
+            SceneManager = sceneManager
         });
+
+        if (!result.Ok)
+        {
+            Debug.LogError($"Failed to start session: {result.ShutdownReason}");
+        }
+    }
+    
+    public async void StartMatch()
+    {
+        if (!networkRunner.IsSharedModeMasterClient)
+            return;
+
+        await networkRunner.LoadScene(SceneRef.FromIndex(1));
     }
 
     public void OnGameStarted(NetworkRunner obj)

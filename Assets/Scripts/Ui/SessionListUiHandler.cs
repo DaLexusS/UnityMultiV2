@@ -10,7 +10,7 @@ using System.Collections.Generic;
 public class SessionListUiHandler : MonoBehaviour
 {
     public static UnityAction<string> onSessionCreated;
-
+    public static UnityAction onHostStartedGame;
 
     public TextMeshProUGUI statusText;
     
@@ -95,6 +95,11 @@ public class SessionListUiHandler : MonoBehaviour
     {
         sessionList.SetActive(false);
         playerCounterUi.SetActive(true);
+    }
+
+    public void HostStartGame()
+    {
+        onHostStartedGame?.Invoke();
     }
 
     public void UpdatePlayerCountInSession(SessionInfo sessionInfo)
