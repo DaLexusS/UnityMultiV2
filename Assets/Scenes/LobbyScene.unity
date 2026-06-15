@@ -500,6 +500,8 @@ MonoBehaviour:
   sceneManager: {fileID: 778845453}
   chatManagerPrefab:
     RawGuidValue: bd4891cfe476f304c995878b593b5e6c
+  characterSelectionNetworkManager:
+    RawGuidValue: 44eb9e5283959664f9a29ef1a7464a05
 --- !u!114 &778845450
 MonoBehaviour:
   m_ObjectHideFlags: 0

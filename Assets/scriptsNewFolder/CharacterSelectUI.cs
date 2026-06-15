@@ -38,6 +38,7 @@ public class CharacterSelectUI : MonoBehaviour
         {
             PlayerData.SelectedCharacter = chosenCharacter;
             SceneManager.LoadScene("GameScen");
+            SceneManager.LoadScene("ChatScene", LoadSceneMode.Additive);
             return;
         }
 
@@ -62,6 +63,7 @@ public class CharacterSelectUI : MonoBehaviour
             statusText.text = "Approved Character " + characterNumber;
 
             SceneManager.LoadScene("GameScene");
+            SceneManager.LoadScene("ChatScene", LoadSceneMode.Additive);
         }
         else
         {

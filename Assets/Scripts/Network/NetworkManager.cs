@@ -11,6 +11,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] NetworkRunner networkRunner;
     [SerializeField] private NetworkSceneManagerDefault sceneManager;
     [SerializeField] private NetworkPrefabRef chatManagerPrefab;
+    [SerializeField] private NetworkPrefabRef characterSelectionNetworkManager;
 
     public static UnityAction onJoinedLobby;
     public static UnityAction<bool> onNoSessionsActive;
@@ -85,7 +86,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         
         if (networkRunner.IsSharedModeMasterClient)
         {
-            networkRunner.Spawn(chatManagerPrefab);
+            NetworkObject chatMan = networkRunner.Spawn(chatManagerPrefab);
+            DontDestroyOnLoad(chatMan);
+            NetworkObject charSelMan =networkRunner.Spawn(characterSelectionNetworkManager);
+            DontDestroyOnLoad(charSelMan);
         }
     }
 
