@@ -14,6 +14,18 @@ public class TargetPlayerDropdown : MonoBehaviour
     private List<PlayerRef> targets = new List<PlayerRef>();
     
     public PlayerRef TargetPlayer { get; private set; }
+    
+    
+    private void OnEnable()
+    {
+        NetworkManager.onJoinedLobby += RefreshDropDownList;
+    }
+
+    private void OnDisable()
+    {
+        NetworkManager.onJoinedLobby -= RefreshDropDownList;
+      
+    }
 
     private void Start()
     {

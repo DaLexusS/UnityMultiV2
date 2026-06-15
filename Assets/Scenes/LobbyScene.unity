@@ -498,6 +498,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetworkManager
   networkRunner: {fileID: 778845450}
   sceneManager: {fileID: 778845453}
+  chatManagerPrefab:
+    RawGuidValue: bd4891cfe476f304c995878b593b5e6c
 --- !u!114 &778845450
 MonoBehaviour:
   m_ObjectHideFlags: 0

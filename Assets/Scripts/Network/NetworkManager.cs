@@ -10,12 +10,14 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] NetworkRunner networkRunner;
     [SerializeField] private NetworkSceneManagerDefault sceneManager;
+    [SerializeField] private NetworkPrefabRef chatManagerPrefab;
+
     public static UnityAction onJoinedLobby;
     public static UnityAction<bool> onNoSessionsActive;
     public static UnityAction<bool> onHostCheck;
     public static UnityAction<List<SessionInfo>> onSessionCreated;
     public static UnityAction<SessionInfo> onLocalPlayerJoined;
-
+  
     private void OnEnable()
     {
         LobbyItemHandler.onLobbyJoined += JoinLobby;
@@ -80,6 +82,11 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         bool isHost = networkRunner.IsSharedModeMasterClient;
         onHostCheck.Invoke(isHost);
+        
+        if (networkRunner.IsSharedModeMasterClient)
+        {
+            networkRunner.Spawn(chatManagerPrefab);
+        }
     }
 
     void INetworkRunnerCallbacks.OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
