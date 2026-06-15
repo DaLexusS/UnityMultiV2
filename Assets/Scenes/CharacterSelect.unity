@@ -130,7 +130,6 @@ GameObject:
   - component: {fileID: 12223655}
   - component: {fileID: 12223654}
   - component: {fileID: 12223653}
-  - component: {fileID: 12223656}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -212,50 +211,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &12223656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 12223652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
-  m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
-  m_RequiresOpaqueTextureOption: 2
-  m_CameraType: 0
-  m_Cameras: []
-  m_RendererIndex: -1
-  m_VolumeLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  m_VolumeTrigger: {fileID: 0}
-  m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
-  m_AntialiasingQuality: 2
-  m_StopNaN: 0
-  m_Dithering: 0
-  m_ClearDepth: 1
-  m_AllowXRRendering: 1
-  m_AllowHDROutput: 1
-  m_UseScreenCoordOverride: 0
-  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
-  m_RequiresDepthTexture: 0
-  m_RequiresColorTexture: 0
-  m_TaaSettings:
-    m_Quality: 3
-    m_FrameInfluence: 0.1
-    m_JitterScale: 1
-    m_MipBias: 0
-    m_VarianceClampScale: 0.9
-    m_ContrastAdaptiveSharpening: 0
-  m_Version: 2
 --- !u!1 &71036555
 GameObject:
   m_ObjectHideFlags: 0
@@ -3365,7 +3320,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2054614502}
         m_TargetAssemblyTypeName: CharacterSelectUI, Assembly-CSharp
-        m_MethodName: SetReady
+        m_MethodName: ConfirmSelection
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3560,7 +3515,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2054614501}
   - component: {fileID: 2054614502}
-  - component: {fileID: 2054614503}
   m_Layer: 0
   m_Name: CharacterSelectManager
   m_TagString: Untagged
@@ -3595,40 +3549,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 153c18e26f1c69a468f997ec43ed9b75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSelectUI
-  state: {fileID: 2054614503}
   statusText: {fileID: 226352111}
---- !u!114 &2054614503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2054614500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9343290c7ac1ef349abd339302bd66f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterSelectionState
-  _Character0: -1
-  _Character1: -1
-  _Character2: -1
-  _Character3: -1
-  _Character4: -1
-  _Character5: -1
-  _Character6: -1
-  _Character7: -1
-  _Character8: -1
-  _Character9: -1
-  _Ready0: 0
-  _Ready1: 0
-  _Ready2: 0
-  _Ready3: 0
-  _Ready4: 0
-  _Ready5: 0
-  _Ready6: 0
-  _Ready7: 0
-  _Ready8: 0
-  _Ready9: 0
+  characterButtons:
+  - {fileID: 1352408385}
+  - {fileID: 2131136893}
+  - {fileID: 425008371}
+  - {fileID: 742064726}
+  - {fileID: 409353712}
+  - {fileID: 1731333360}
+  - {fileID: 577661563}
+  - {fileID: 1612943560}
+  - {fileID: 220960252}
+  - {fileID: 1890399735}
 --- !u!1 &2131136891
 GameObject:
   m_ObjectHideFlags: 0
