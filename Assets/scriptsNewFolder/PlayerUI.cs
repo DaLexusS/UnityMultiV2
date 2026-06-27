@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Fusion;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
+    [SerializeField] private NetworkRunner netRunner;
     public static PlayerUI Instance { get; private set; }
     
     [SerializeField] private Slider[] hpBars;
@@ -16,13 +18,40 @@ public class PlayerUI : MonoBehaviour
     {
         Instance = this;
     }
+    
+    public void RefreshPlayers()
+    {
+        playerSliders.Clear();
+
+        foreach (Slider slider in hpBars)
+            slider.gameObject.SetActive(false);
+
+        List<PlayerRef> players = netRunner.ActivePlayers.OrderBy(player => player.PlayerId).ToList();
+
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (i >= hpBars.Length)
+                break;
+
+            PlayerRef player = players[i];
+            Slider slider = hpBars[i];
+
+            playerSliders[player] = slider;
+            slider.gameObject.SetActive(true);
+        }
+    }
 
     public void RegisterPlayer(PlayerRef pl, int maxValue)
     {
-        Slider sliderForNewPlayer = GetFreeSlider();
-        playerSliders[pl] = sliderForNewPlayer;
+        RefreshPlayers();
+        
         playerSliders[pl].maxValue = maxValue;
         UpdateHealth(pl, maxValue);
+    }
+
+    public void UnRegisterPLayer(PlayerRef pl)
+    {
+        RefreshPlayers();
     }
 
     private Slider GetFreeSlider()

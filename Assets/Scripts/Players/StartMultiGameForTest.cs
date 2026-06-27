@@ -4,8 +4,10 @@ using UnityEngine;
 public class StartMultiGameForTest : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private NetworkRunner networkRunner;
+    
+    private int nextSpawnPoint = 0;
     private async void Start()
     {
         var result = await networkRunner.StartGame(new StartGameArgs()
@@ -24,6 +26,30 @@ public class StartMultiGameForTest : MonoBehaviour
 
     private void OnGameStarted(NetworkRunner runner)
     {
-        networkRunner.Spawn(playerPrefab, spawnPoint.position);
+        SpawnLocalPlayer(runner);
+    }
+
+    private void SpawnLocalPlayer(NetworkRunner runner)
+    {
+        Transform spawn = GetNextSpawnPoint();
+
+        runner.Spawn(
+            playerPrefab,
+            spawn.position,
+            spawn.rotation,
+            runner.LocalPlayer
+        );
+    }
+
+    private Transform GetNextSpawnPoint()
+    {
+        Transform point = spawnPoints[nextSpawnPoint];
+
+        nextSpawnPoint++;
+
+        if (nextSpawnPoint >= spawnPoints.Length)
+            nextSpawnPoint = 0;
+
+        return point;
     }
 }
