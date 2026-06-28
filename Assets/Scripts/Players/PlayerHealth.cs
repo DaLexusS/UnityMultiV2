@@ -25,12 +25,18 @@ public class PlayerHealth : NetworkBehaviour
         PlayerUI.Instance.UnRegisterPLayer(Object.InputAuthority);
     }
 
-    [ContextMenu("Damage")]
-    public void TakeDamage()
+    [Rpc]
+    public void RPCTakeDamage(int damage)
+    {
+        TakeDamage(damage);
+    }
+
+   
+    private void TakeDamage(int damage)
     {
         if (Object.HasStateAuthority)
         {
-            CurrentHp -= 10;
+            CurrentHp -= damage;
             CheckHealthAfterChanged();
         }
     }
