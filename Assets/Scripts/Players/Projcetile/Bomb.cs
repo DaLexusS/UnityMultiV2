@@ -24,10 +24,23 @@ public class Bomb : NetworkBehaviour
         
         if (other.CompareTag("Player") && other.TryGetComponent(out PlayerHealth plHealth))
         {
+            PlayerHealth player = other.gameObject.GetComponent<PlayerHealth>();
             if (HasStateAuthority)
             {
-                plHealth.RPCTakeDamage(damage);
+                if (!player.HasStateAuthority)
+                {
+                    plHealth.RPCTakeDamage(damage);
+                    Runner.Despawn(Object);
+                }
             }
+        }
+        else if (other.CompareTag("Wall"))
+        {
+            if (HasStateAuthority)
+            {
+                Runner.Despawn(Object);
+            }
+            
         }
     }
 }
