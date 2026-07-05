@@ -6,6 +6,7 @@ public class Bomb : NetworkBehaviour
 {
     [SerializeField] private float flySpeed;
     [SerializeField] private int damage;
+    [SerializeField] private GameObject visual;
     [SerializeField] private ParticleSystem explosionPartical;
     
     public bool CanFly { get; set; }
@@ -30,7 +31,8 @@ public class Bomb : NetworkBehaviour
                 if (!player.HasStateAuthority)
                 {
                     plHealth.RPCTakeDamage(damage);
-                    Runner.Despawn(Object);
+                    
+                    BombDestruction(other.gameObject);
                 }
             }
         }
@@ -38,9 +40,30 @@ public class Bomb : NetworkBehaviour
         {
             if (HasStateAuthority)
             {
-                Runner.Despawn(Object);
+                BombDestruction(other.gameObject);
             }
             
         }
     }
+
+    private async void BombDestruction(GameObject gameObject)
+    {
+        CanFly = false;
+        RPCPlayExplosion();
+        
+        await Awaitable.WaitForSecondsAsync(2f);
+        Runner.Despawn(Object);
+    }
+    
+    
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPCPlayExplosion()
+    {
+        visual.SetActive(false);
+
+        explosionPartical.gameObject.SetActive(true);
+        explosionPartical.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        explosionPartical.Play(true);
+    }
+    
 }
