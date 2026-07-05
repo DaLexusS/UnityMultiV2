@@ -16,7 +16,7 @@ public class PlayerCombat : NetworkBehaviour
         base.FixedUpdateNetwork();
         if (!bombIsSpawned && Keyboard.current.spaceKey.isPressed)
         {
-            currentbomb = Runner.Spawn(bombPrefab, bombSpawnPoint.position, Quaternion.identity);
+            currentbomb = Runner.Spawn(bombPrefab, bombSpawnPoint.position,  transform.rotation);
             bombIsSpawned = true;
         }
 
