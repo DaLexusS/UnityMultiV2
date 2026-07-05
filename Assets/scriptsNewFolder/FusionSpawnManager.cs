@@ -1,41 +1,45 @@
 using Fusion;
 using UnityEngine;
 
-public class FusionSpawnManager : MonoBehaviour
+public class FusionSpawnManager : NetworkBehaviour
 {
-    [SerializeField] private NetworkObject[] characterPrefabs;
-    [SerializeField] private Transform[] spawnPoints;
-
-    private void Start()
+    [SerializeField] private SpawnPoint[] spawnPoints;
+    [SerializeField] private NetworkObject  playerPrefab;
+    
+    public override void Spawned()
     {
-        NetworkRunner runner = FindFirstObjectByType<NetworkRunner>();
-
-        if (runner == null)
+        base.Spawned();
+        RPCRequestSpawn();
+        
+    }
+    
+    
+    
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPCRequestSpawn(RpcInfo info = default)
+    {
+        int spawnSpawnIndex = 0;
+        SpawnPoint targetSpawnPoint;
+        do
         {
-            Debug.LogError("NetworkRunner not found!");
-            return;
-        }
-
-        int selectedCharacter = PlayerData.SelectedCharacter;
-
-        if (selectedCharacter < 1 || selectedCharacter > characterPrefabs.Length)
-        {
-            Debug.LogError("Wrong character index!");
-            return;
-        }
-
-        int characterIndex = selectedCharacter - 1;
-
-        NetworkObject selectedPrefab = characterPrefabs[characterIndex];
-
-        int spawnIndex = (runner.LocalPlayer.PlayerId - 1) % spawnPoints.Length;
-        Transform selectedSpawnPoint = spawnPoints[spawnIndex];
-
-        runner.Spawn(
-            selectedPrefab,
-            selectedSpawnPoint.position,
-            selectedSpawnPoint.rotation,
-            runner.LocalPlayer
-        );
+            spawnSpawnIndex = Random.Range(0, spawnPoints.Length);
+            targetSpawnPoint = spawnPoints[spawnSpawnIndex];
+        } while (targetSpawnPoint.isTaken);
+    
+        targetSpawnPoint.isTaken = true;
+        RPCSetSpawnPoint(info.Source, spawnSpawnIndex);
+    }
+    
+    
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPCSetSpawnPoint([RpcTarget] PlayerRef targetPlayer, int spawnPointIndex)
+    {
+        
+        Debug.Log("RPCSetSpawnPoint");
+        SpawnPoint targetSpawnPoint = spawnPoints[spawnPointIndex];
+    
+        targetSpawnPoint.isTaken = true;
+        Runner.SpawnAsync(playerPrefab, targetSpawnPoint.transform.position,
+            targetSpawnPoint.transform.rotation);
     }
 }

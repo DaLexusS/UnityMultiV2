@@ -6,8 +6,7 @@ public class StartMultiGameForTest : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private NetworkRunner networkRunner;
-    
-    private int nextSpawnPoint = 0;
+
     private async void Start()
     {
         var result = await networkRunner.StartGame(new StartGameArgs()
@@ -31,7 +30,8 @@ public class StartMultiGameForTest : MonoBehaviour
 
     private void SpawnLocalPlayer(NetworkRunner runner)
     {
-        Transform spawn = GetNextSpawnPoint();
+        int spawnIndex = GetSpawnIndex(runner.LocalPlayer);
+        Transform spawn = spawnPoints[spawnIndex];
 
         runner.Spawn(
             playerPrefab,
@@ -41,15 +41,8 @@ public class StartMultiGameForTest : MonoBehaviour
         );
     }
 
-    private Transform GetNextSpawnPoint()
+    private int GetSpawnIndex(PlayerRef player)
     {
-        Transform point = spawnPoints[nextSpawnPoint];
-
-        nextSpawnPoint++;
-
-        if (nextSpawnPoint >= spawnPoints.Length)
-            nextSpawnPoint = 0;
-
-        return point;
+        return (player.PlayerId - 1) % spawnPoints.Length;
     }
 }

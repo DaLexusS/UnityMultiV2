@@ -26,10 +26,7 @@ public class Bomb : NetworkBehaviour
         {
             if (HasStateAuthority)
             {
-                if (!plHealth.HasStateAuthority)
-                {
-                    plHealth.RPCTakeDamage(damage);
-                }
+                plHealth.RPCTakeDamage(damage);
             }
         }
     }
