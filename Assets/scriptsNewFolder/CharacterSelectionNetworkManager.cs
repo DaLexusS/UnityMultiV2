@@ -36,4 +36,21 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
             ui.ReceiveSelectionResult(characterNumber, approved);
         }
     }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_CloseSessionForEveryone()
+    {
+        NetworkManager networkManager = NetworkManager.Instance;
+
+        if (networkManager == null)
+            return;
+
+        if (Runner.IsSharedModeMasterClient)
+        {
+            networkManager.LeaveSessionAfterDelay(0.5f);
+            return;
+        }
+
+        networkManager.LeaveSession();
+    }
 }

@@ -10,6 +10,7 @@ public class SessionInfoListUiItem : MonoBehaviour
     public static UnityAction<string> onSessionJoin;
     public TextMeshProUGUI sessionNameText;
     public TextMeshProUGUI sessionCountText;
+    public TextMeshProUGUI sessionStatusText;
     public Button joinButton;
 
     SessionInfo sessionInfo;
@@ -20,17 +21,35 @@ public class SessionInfoListUiItem : MonoBehaviour
         sessionNameText.text = sessionInfo.Name;
         sessionCountText.text = $"{sessionInfo.PlayerCount}/{sessionInfo.MaxPlayers}";
 
-        bool isJoinButtonActive = true;
+        bool isFull = sessionInfo.PlayerCount >= sessionInfo.MaxPlayers;
+        bool isStarted = SessionMetadata.IsStarted(sessionInfo);
+        bool isJoinButtonActive = sessionInfo.IsOpen && !isFull && !isStarted;
 
-        if (sessionInfo.PlayerCount >= sessionInfo.MaxPlayers)
-        {
-            isJoinButtonActive = false;
-        }
+        if (sessionStatusText != null)
+            sessionStatusText.text = GetStatusText(sessionInfo, isFull, isStarted);
 
         joinButton.gameObject.SetActive(isJoinButtonActive);
     }
+
+    private static string GetStatusText(SessionInfo sessionInfo, bool isFull, bool isStarted)
+    {
+        if (isStarted)
+            return "Started";
+
+        if (!sessionInfo.IsOpen)
+            return "Closed";
+
+        if (isFull)
+            return "Full";
+
+        return "Waiting";
+    }
+
     public void Join()
     {
+        if (sessionInfo == null || !sessionInfo.IsOpen || SessionMetadata.IsStarted(sessionInfo) || sessionInfo.PlayerCount >= sessionInfo.MaxPlayers)
+            return;
+
         onSessionJoin.Invoke(sessionInfo.Name);
     }
 }
