@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
-    [SerializeField] private NetworkRunner netRunner;
+    private NetworkRunner netRunner;
     public static PlayerUI Instance { get; private set; }
     
     [SerializeField] private Slider[] hpBars;
@@ -17,6 +17,7 @@ public class PlayerUI : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        netRunner = NetworkManager.Instance.Runner;
     }
     
     public void RefreshPlayers()

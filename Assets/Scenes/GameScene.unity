@@ -847,29 +847,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 867353886}
-  - component: {fileID: 867353885}
-  - component: {fileID: 867353887}
   - component: {fileID: 867353888}
   - component: {fileID: 867353889}
   m_Layer: 0
-  m_Name: NetWorkRunner
+  m_Name: UI_Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &867353885
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867353884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1199893898, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkRunner
 --- !u!4 &867353886
 Transform:
   m_ObjectHideFlags: 0
@@ -885,27 +871,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &867353887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867353884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbf4245a498db114484c8980d9df8f0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StartMultiGameForTest
-  playerPrefab: {fileID: 8587910293910979656, guid: bccdd6daf765e9f4a8f394ddfa96f37e, type: 3}
-  spawnPoints:
-  - {fileID: 369743938}
-  - {fileID: 1212578766}
-  - {fileID: 1627361936}
-  - {fileID: 1171143178}
-  networkRunner: {fileID: 867353885}
-  pointsCountManagerPrefan:
-    RawGuidValue: 5249fa00778f00241a6592f7bb06ca22
 --- !u!114 &867353888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -918,7 +883,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db5a05221872f6439349f1377e18558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
-  netRunner: {fileID: 867353885}
   hpBars:
   - {fileID: 2040804431}
   - {fileID: 2063760932}
@@ -935,7 +899,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResultsUI
   resultsText: {fileID: 1775416203}
---- !u!1 &874300201
+--- !u!1 &923511261
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -943,66 +907,64 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 874300202}
-  - component: {fileID: 874300203}
-  - component: {fileID: 874300204}
+  - component: {fileID: 923511263}
+  - component: {fileID: 923511262}
+  - component: {fileID: 923511264}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: NetWorkRunner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &874300202
+  m_IsActive: 1
+--- !u!114 &923511262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923511261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1199893898, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkRunner
+--- !u!4 &923511263
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874300201}
+  m_GameObject: {fileID: 923511261}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 150.99997, y: 470.5, z: 0}
+  m_LocalPosition: {x: 962.5441, y: 540.42194, z: 1.1095}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &874300203
+--- !u!114 &923511264
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874300201}
+  m_GameObject: {fileID: 923511261}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab3e61d3d3b0ad840b5b10cdd92a2ede, type: 3}
+  m_Script: {fileID: 11500000, guid: fbf4245a498db114484c8980d9df8f0c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FusionSpawnManager
+  m_EditorClassIdentifier: Assembly-CSharp::StartMultiGameForTest
+  playerPrefab:
+    RawGuidValue: bccdd6daf765e9f4a8f394ddfa96f37e
   spawnPoints:
-  - {fileID: 369743939}
-  - {fileID: 1627361937}
-  playerPrefab: {fileID: 3158042016697491571, guid: bccdd6daf765e9f4a8f394ddfa96f37e, type: 3}
---- !u!114 &874300204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874300201}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 2642380304
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 874300203}
-  ForceRemoteRenderTimeframe: 0
+  - {fileID: 369743938}
+  - {fileID: 1627361936}
+  - {fileID: 1212578766}
+  - {fileID: 1171143178}
+  pointsCountManagerPrefab:
+    RawGuidValue: 5249fa00778f00241a6592f7bb06ca22
 --- !u!1 &1025099676
 GameObject:
   m_ObjectHideFlags: 0
@@ -2448,8 +2410,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 761699613}
   - {fileID: 1933887738}
-  - {fileID: 874300202}
   - {fileID: 533784003}
   - {fileID: 867353886}
   - {fileID: 227849115}
   - {fileID: 1343724757}
+  - {fileID: 923511263}

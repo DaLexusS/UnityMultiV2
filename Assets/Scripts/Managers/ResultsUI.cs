@@ -6,7 +6,7 @@ public class ResultsUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI resultsText;
 
-    [ContextMenu("Show me money")]
+    [ContextMenu("Show me results")]
     public void ShowResults()
     {
         resultsText.text = "";
