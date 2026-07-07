@@ -54,19 +54,7 @@ public class PlayerUI : MonoBehaviour
     {
         RefreshPlayers();
     }
-
-    private Slider GetFreeSlider()
-    {
-        foreach (Slider slider in hpBars)
-        {
-            if (!playerSliders.ContainsValue(slider))
-                return slider;
-        }
-
-        Debug.LogError("No free health sliders!");
-        return null;
-    }
-
+    
     public void UpdateHealth(PlayerRef player, int value)
     {
         playerSliders[player].value = value;
