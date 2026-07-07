@@ -16,6 +16,7 @@ public class PlayerCombat : NetworkBehaviour
         base.FixedUpdateNetwork();
         if (!bombIsSpawned && Keyboard.current.spaceKey.isPressed)
         {
+            PointsCountManager.Instance.RPC_AddPoint(Runner.LocalPlayer);
             currentbomb = Runner.Spawn(bombPrefab, bombSpawnPoint.position,  transform.rotation);
             bombIsSpawned = true;
         }
