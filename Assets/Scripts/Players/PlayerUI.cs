@@ -62,7 +62,7 @@ public class PlayerUI : MonoBehaviour
                 return slider;
         }
 
-        Debug.LogError("No free health sliders!");
+        ErrorHandlerUi.ReportError("No free health sliders!");
         return null;
     }
 

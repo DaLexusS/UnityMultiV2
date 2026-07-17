@@ -19,7 +19,7 @@ public class StartMultiGameForTest : MonoBehaviour
 
         if (!result.Ok)
         {
-            Debug.LogError(result.ShutdownReason);
+            ErrorHandlerUi.ReportError($"Failed to start test session: {result.ShutdownReason}");
         }
     }
 

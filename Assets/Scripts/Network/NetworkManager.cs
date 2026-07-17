@@ -15,15 +15,21 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkSceneManagerDefault sceneManager;
     [SerializeField] private NetworkPrefabRef chatManagerPrefab;
     [SerializeField] private NetworkPrefabRef characterSelectionNetworkManager;
+    [SerializeField] private bool autoJoinLobbyOnStart = true;
+    [SerializeField] private string defaultLobbyName = "Default";
     private string _currentLobbyName;
+    private bool _isJoiningLobby;
+    private bool _isIntentionalShutdown;
 
     public NetworkRunner Runner => networkRunner;
+    public string LocalPlayerNickname { get; private set; }
 
     public static UnityAction onJoinedLobby;
     public static UnityAction<bool> onNoSessionsActive;
     public static UnityAction<bool> onHostCheck;
     public static UnityAction<List<SessionInfo>> onSessionCreated;
     public static UnityAction<SessionInfo> onLocalPlayerJoined;
+    public static UnityAction onSessionStartSucceeded;
   
     private void OnEnable()
     {
@@ -31,7 +37,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         LobbyItemHandler.onLobbyJoined += JoinLobby;
         SessionListUiHandler.onSessionCreated += CreateSession;
         SessionListUiHandler.onSessionSettingsChanged += UpdateSessionSettings;
-        SessionInfoListUiItem.onSessionJoin += StartSession;
         SessionListUiHandler.onHostStartedGame += StartMatch;
         SessionListUiHandler.onHostClosedSession += CloseSessionForEveryone;
         SessionListUiHandler.onLocalPlayerLeftSession += LeaveSession;
@@ -42,7 +47,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         LobbyItemHandler.onLobbyJoined -= JoinLobby;
         SessionListUiHandler.onSessionCreated -= CreateSession;
         SessionListUiHandler.onSessionSettingsChanged -= UpdateSessionSettings;
-        SessionInfoListUiItem.onSessionJoin -= StartSession;
         SessionListUiHandler.onHostStartedGame -= StartMatch;
         SessionListUiHandler.onHostClosedSession -= CloseSessionForEveryone;
         SessionListUiHandler.onLocalPlayerLeftSession -= LeaveSession;
@@ -55,26 +59,44 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private void Start()
     {
         networkRunner.AddCallbacks(this);
+
+        if (autoJoinLobbyOnStart)
+            JoinLobby(defaultLobbyName);
     }
 
     public async void JoinLobby(string lobbyName)
     {
+        if (string.IsNullOrWhiteSpace(lobbyName))
+            lobbyName = defaultLobbyName;
 
+        if (_isJoiningLobby)
+            return;
+
+        if (networkRunner.LobbyInfo.IsValid && networkRunner.LobbyInfo.Name == lobbyName)
+        {
+            _currentLobbyName = lobbyName;
+            onJoinedLobby?.Invoke();
+            return;
+        }
+
+        _isJoiningLobby = true;
         StartGameResult result = await networkRunner.JoinSessionLobby(SessionLobby.Custom, lobbyName);
+        _isJoiningLobby = false;
 
         if (result.Ok)
         {
             _currentLobbyName = lobbyName;
-            onJoinedLobby.Invoke();
+            onJoinedLobby?.Invoke();
         }
         else
         {
-            Debug.Log("couldn't connect the lobby");
+            ReportServerError($"Couldn't connect to lobby: {GetStartGameError(result)}");
         }
     }
     public async void CreateSession(SessionCreateRequest request)
     {
-        await StartSession(request.SessionName, request.ShowInLobby, request.GameMode, request.Map);
+        SetLocalPlayerNickname(request.PlayerNickname);
+        await StartSession(request.SessionName, request.ShowInLobby, request.GameMode, request.Map, request.Region, request.PlayerCount, request.PasswordProtected, request.Password);
     }
 
     public void UpdateSessionSettings(SessionCreateRequest request)
@@ -86,47 +108,96 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         networkRunner.SessionInfo.UpdateCustomProperties(SessionMetadata.CreateProperties(
             request.GameMode,
             request.Map,
-            GetCurrentSessionProperty(SessionMetadata.StateKey, SessionMetadata.StateLobby)));
+            request.Region,
+            GetCurrentSessionProperty(SessionMetadata.StateKey, SessionMetadata.StateLobby),
+            IsCurrentSessionPasswordProtected(),
+            GetCurrentSessionProperty(SessionMetadata.PasswordKey, string.Empty)));
 
         Debug.Log($"Updated session settings: {SessionMetadata.GetDebugDescription(networkRunner.SessionInfo)}");
     }
 
-    public async void StartSession(string sessionName)
+    public void SetLocalPlayerNickname(string nickname)
     {
-        await StartSession(sessionName, true, "Default", "Default");
+        LocalPlayerNickname = string.IsNullOrWhiteSpace(nickname) ? string.Empty : nickname.Trim();
     }
 
-    private async System.Threading.Tasks.Task StartSession(string sessionName, bool isVisible, string gameMode, string map)
+    public void SubmitLocalNickname()
+    {
+        if (string.IsNullOrWhiteSpace(LocalPlayerNickname))
+            return;
+
+        CharacterSelectionNetworkManager sessionManager = CharacterSelectionNetworkManager.Instance;
+
+        if (sessionManager == null)
+            return;
+
+        sessionManager.RPC_RegisterNickname(LocalPlayerNickname);
+    }
+
+    public void KickPlayer(PlayerRef player)
+    {
+        CharacterSelectionNetworkManager sessionManager = CharacterSelectionNetworkManager.Instance;
+
+        if (sessionManager == null)
+        {
+            ReportServerError("Could not kick player. Lobby player manager is not ready.");
+            return;
+        }
+
+        sessionManager.KickPlayer(player);
+    }
+
+    public async void StartSession(string sessionName)
+    {
+        if (string.IsNullOrWhiteSpace(LocalPlayerNickname))
+        {
+            ReportServerError("Enter your nickname.");
+            return;
+        }
+
+        await StartSession(sessionName, true, "Default", "Default", "Default", 4, false, string.Empty);
+    }
+
+    private async System.Threading.Tasks.Task StartSession(string sessionName, bool isVisible, string gameMode, string map, string region, int playerCount, bool passwordProtected, string password)
     {
         var result = await networkRunner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             SessionName = sessionName,
-            PlayerCount = 10,
+            PlayerCount = Mathf.Clamp(playerCount, 2, 4),
             OnGameStarted = OnGameStarted,
             CustomLobbyName = GetCurrentLobbyName(),
             SceneManager = sceneManager,
             IsVisible = isVisible,
             IsOpen = true,
-            SessionProperties = SessionMetadata.CreateProperties(gameMode, map, SessionMetadata.StateLobby)
+            SessionProperties = SessionMetadata.CreateProperties(gameMode, map, region, SessionMetadata.StateLobby, passwordProtected, password)
         });
 
         if (!result.Ok)
         {
-            Debug.LogError($"Failed to start session: {result.ShutdownReason}");
+            ReportServerError($"Failed to start session: {GetStartGameError(result)}");
+            return;
         }
+
+        onSessionStartSucceeded?.Invoke();
     }
     
     public async void StartMatch()
     {
         if (!networkRunner.IsSharedModeMasterClient)
+        {
+            ReportServerError("Only the host can start the match.");
             return;
+        }
 
         networkRunner.SessionInfo.IsOpen = false;
         networkRunner.SessionInfo.UpdateCustomProperties(SessionMetadata.CreateProperties(
             GetCurrentSessionProperty(SessionMetadata.GameModeKey, "Default"),
             GetCurrentSessionProperty(SessionMetadata.MapKey, "Default"),
-            SessionMetadata.StateStarted));
+            GetCurrentSessionProperty(SessionMetadata.RegionKey, "Default"),
+            SessionMetadata.StateStarted,
+            IsCurrentSessionPasswordProtected(),
+            GetCurrentSessionProperty(SessionMetadata.PasswordKey, string.Empty)));
 
         await networkRunner.LoadScene(SceneRef.FromIndex(1));
     }
@@ -134,7 +205,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     public void CloseSessionForEveryone()
     {
         if (!networkRunner.IsRunning || !networkRunner.SessionInfo.IsValid || !networkRunner.IsSharedModeMasterClient)
+        {
+            ReportServerError("Only the host can close this session.");
             return;
+        }
 
         networkRunner.SessionInfo.IsOpen = false;
         networkRunner.SessionInfo.IsVisible = false;
@@ -147,7 +221,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         }
         else
         {
-            Debug.LogWarning("Could not find CharacterSelectionNetworkManager. Closing only the local session.");
+            ReportServerError("Could not close the session for everyone. Closing your local session only.");
             LeaveSession();
         }
     }
@@ -169,6 +243,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public async System.Threading.Tasks.Task ShutdownAndLoadLobbySelection()
     {
+        _isIntentionalShutdown = true;
+
         if (networkRunner != null && networkRunner.IsRunning)
             await networkRunner.Shutdown();
 
@@ -186,18 +262,39 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         return SessionMetadata.TryGetValue(networkRunner.SessionInfo, key, out string value) ? value : fallback;
     }
 
+    private bool IsCurrentSessionPasswordProtected()
+    {
+        return GetCurrentSessionProperty(SessionMetadata.PasswordProtectedKey, "false") == "true";
+    }
+
     private string GetCurrentLobbyName()
     {
         if (networkRunner.LobbyInfo.IsValid)
             return networkRunner.LobbyInfo.Name;
 
-        return _currentLobbyName;
+        if (!string.IsNullOrWhiteSpace(_currentLobbyName))
+            return _currentLobbyName;
+
+        return defaultLobbyName;
+    }
+
+    private void ReportServerError(string message)
+    {
+        ErrorHandlerUi.ReportError(message);
+    }
+
+    private static string GetStartGameError(StartGameResult result)
+    {
+        if (!string.IsNullOrWhiteSpace(result.ErrorMessage))
+            return result.ErrorMessage;
+
+        return result.ShutdownReason.ToString();
     }
 
     public void OnGameStarted(NetworkRunner obj)
     {
         bool isHost = networkRunner.IsSharedModeMasterClient;
-        onHostCheck.Invoke(isHost);
+        onHostCheck?.Invoke(isHost);
         
         if (networkRunner.IsSharedModeMasterClient)
         {
@@ -206,6 +303,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             NetworkObject charSelMan =networkRunner.Spawn(characterSelectionNetworkManager);
             DontDestroyOnLoad(charSelMan);
         }
+
+        SubmitLocalNickname();
     }
 
     void INetworkRunnerCallbacks.OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
@@ -219,21 +318,36 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        onLocalPlayerJoined.Invoke(runner.SessionInfo);
+        onLocalPlayerJoined?.Invoke(runner.SessionInfo);
+
+        if (player == runner.LocalPlayer)
+            SubmitLocalNickname();
     }
 
     void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        onLocalPlayerJoined.Invoke(runner.SessionInfo);
+        if (runner.IsSharedModeMasterClient && CharacterSelectionNetworkManager.Instance != null)
+            CharacterSelectionNetworkManager.Instance.RemovePlayer(player);
+
+        onLocalPlayerJoined?.Invoke(runner.SessionInfo);
 
     }
 
     void INetworkRunnerCallbacks.OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
+        if (_isIntentionalShutdown)
+            return;
+
+        if (shutdownReason != ShutdownReason.Ok)
+            ReportServerError($"Network shutdown: {shutdownReason}");
     }
 
     void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
+        if (_isIntentionalShutdown)
+            return;
+
+        ReportServerError($"Disconnected from server: {reason}");
     }
 
     void INetworkRunnerCallbacks.OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
@@ -242,6 +356,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     void INetworkRunnerCallbacks.OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
+        ReportServerError($"Connection failed: {reason}");
     }
 
     void INetworkRunnerCallbacks.OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
@@ -275,14 +390,14 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (sessionList.Count <= 0)
         {
-            onNoSessionsActive.Invoke(true);
+            onNoSessionsActive?.Invoke(true);
         }
         else
         {
-            onNoSessionsActive.Invoke(false);
+            onNoSessionsActive?.Invoke(false);
         }
 
-        onSessionCreated.Invoke(sessionList);
+        onSessionCreated?.Invoke(sessionList);
     }
 
     void INetworkRunnerCallbacks.OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
