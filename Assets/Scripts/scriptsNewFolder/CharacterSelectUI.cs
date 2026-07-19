@@ -52,7 +52,7 @@ public class CharacterSelectUI : MonoBehaviour
         }
 
         statusText.text = "Requesting Character " + chosenCharacter + "...";
-        manager.RPC_RequestCharacter(chosenCharacter);
+       // manager.RPC_RequestCharacter(chosenCharacter);
     }
 
     public void ReceiveSelectionResult(int characterNumber, bool approved)
@@ -81,8 +81,8 @@ public class CharacterSelectUI : MonoBehaviour
 
         for (int i = 0; i < characterButtons.Length; i++)
         {
-            bool isTaken = manager.TakenCharacters[i] != 0;
-            characterButtons[i].interactable = !isTaken;
+           // bool isTaken = manager.TakenCharacters[i] != 0;
+            //characterButtons[i].interactable = !isTaken;
         }
     }
 }
