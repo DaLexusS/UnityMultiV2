@@ -26,14 +26,69 @@ public class PlayerSpawner : MonoBehaviour
         if (localPlayerSpawned)
             return;
 
+        if (ReadyManager.Instance == null)
+        {
+            Debug.LogError(
+                "ReadyManager was not found in the gameplay scene.",
+                this
+            );
+
+            return;
+        }
+
+        int confirmedSkinId =
+            ReadyManager.Instance.GetConfirmedSkin(
+                runner.LocalPlayer
+            );
+
+        if (confirmedSkinId <= 0)
+        {
+            Debug.LogError(
+                $"Player {runner.LocalPlayer} has no confirmed skin.",
+                this
+            );
+
+            return;
+        }
+
+        int spawnIndex =
+            GetSpawnIndex(runner.LocalPlayer);
+
+        Transform spawn =
+            spawnPoints[spawnIndex];
+
+        NetworkObject playerObject =
+            await runner.SpawnAsync(
+                playerPrefab,
+                spawn.position,
+                spawn.rotation,
+                runner.LocalPlayer,
+                (spawnRunner, spawnedObject) =>
+                {
+                    PlayerSkinChanger skinChanger =
+                        spawnedObject.GetComponent<PlayerSkinChanger>();
+
+                    if (skinChanger == null)
+                    {
+                        Debug.LogError(
+                            "PlayerSkinChanger was not found on the player prefab.",
+                            spawnedObject
+                        );
+
+                        return;
+                    }
+
+                    skinChanger.SetInitialSkin(
+                        confirmedSkinId
+                    );
+                }
+            );
+
         localPlayerSpawned = true;
 
-        int spawnIndex = GetSpawnIndex(runner.LocalPlayer);
-        Transform spawn = spawnPoints[spawnIndex];
-
-        NetworkObject playerObject = await runner.SpawnAsync(playerPrefab, spawn.position, spawn.rotation, runner.LocalPlayer);
-
-        PointsCountManager.Instance.RPC_RegisterPlayer(playerObject.InputAuthority);
+        PointsCountManager.Instance.RPC_RegisterPlayer(
+            playerObject.InputAuthority
+        );
     }
 
     private int GetSpawnIndex(PlayerRef player)

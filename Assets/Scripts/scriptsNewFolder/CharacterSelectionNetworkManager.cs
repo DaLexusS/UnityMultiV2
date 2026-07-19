@@ -279,4 +279,21 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
 
         networkManager.LeaveSession();
     }
+    
+    
+    public string GetPlayerNickname(PlayerRef player)
+    {
+        int slot = GetPlayerSlot(player);
+
+        if (slot < 0)
+            return $"Player {player.PlayerId + 1}";
+
+        string nickname =
+            LobbyPlayerNicknames.Get(slot).ToString();
+
+        if (string.IsNullOrWhiteSpace(nickname))
+            return $"Player {player.PlayerId + 1}";
+
+        return nickname;
+    }
 }

@@ -14,15 +14,32 @@ public class PlayerHealth : NetworkBehaviour
 
     public override void Spawned()
     {
-        base.Spawned();
-        CurrentHp = MaxHp;
-        PlayerUI.Instance.RegisterPlayer(Object.InputAuthority, CurrentHp);
+        if (Object.HasStateAuthority)
+        {
+            CurrentHp = MaxHp;
+        }
+
+        string nickname =
+            CharacterSelectionNetworkManager.Instance != null
+                ? CharacterSelectionNetworkManager.Instance
+                    .GetPlayerNickname(Object.InputAuthority)
+                : $"Player {Object.InputAuthority.PlayerId + 1}";
+
+        PlayerUI.Instance?.RegisterPlayer(
+            Object.InputAuthority,
+            MaxHp,
+            CurrentHp,
+            nickname
+        );
     }
 
-    public override void Despawned(NetworkRunner runner, bool hasState)
+    public override void Despawned(
+        NetworkRunner runner,
+        bool hasState)
     {
-        base.Despawned(runner, hasState);
-        PlayerUI.Instance.UnRegisterPLayer(Object.InputAuthority);
+        PlayerUI.Instance?.UnregisterPlayer(
+            Object.InputAuthority
+        );
     }
 
     [Rpc]

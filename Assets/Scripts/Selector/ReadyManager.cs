@@ -37,7 +37,7 @@ public class ReadyManager : NetworkBehaviour
     public override void Spawned()
     {
         Instance = this;
-
+        DontDestroyOnLoad(Instance);
         // OnChangedRender is not called for initial values.
         OnReadyStateChanged?.Invoke();
     }
@@ -244,10 +244,7 @@ public class ReadyManager : NetworkBehaviour
         );
     }
 
-    /*
-     * Called when a new player occupies a previously empty lobby slot.
-     * It prevents stale ready/skin data from a disconnected player.
-     */
+   
     public void ResetSlotForNewPlayer(int playerSlot)
     {
         if (!Object.HasStateAuthority ||
@@ -272,10 +269,7 @@ public class ReadyManager : NetworkBehaviour
         MarkStateChanged();
     }
 
-    /*
-     * Must be called before or while removing the player
-     * from LobbyPlayers.
-     */
+   
     public void RemovePlayerState(
         PlayerRef player,
         int playerSlot)
@@ -446,6 +440,25 @@ public class ReadyManager : NetworkBehaviour
     {
         return skinNumber >= 1 &&
                skinNumber <= SkinCount;
+    }
+    
+    public int GetConfirmedSkin(PlayerRef player)
+    {
+        if (player == PlayerRef.None)
+            return 0;
+
+        int playerKey = player.RawEncoded;
+
+        for (int i = 0; i < LockedSkinOwners.Length; i++)
+        {
+            if (LockedSkinOwners.Get(i) == playerKey)
+            {
+                // Array index 0 represents Skin 1.
+                return i + 1;
+            }
+        }
+
+        return 0;
     }
 
     private static bool IsValidPlayerSlot(int playerSlot)

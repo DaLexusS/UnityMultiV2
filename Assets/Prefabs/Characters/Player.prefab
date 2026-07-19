@@ -42,10 +42,11 @@ GameObject:
   - component: {fileID: 8426728923774947944}
   - component: {fileID: 3158042016697491571}
   - component: {fileID: 4626689783264709220}
+  - component: {fileID: 3603182446017681866}
   - component: {fileID: 924480037533177669}
   - component: {fileID: 27206135183645212}
   - component: {fileID: 8364481035990828272}
-  - component: {fileID: 3603182446017681866}
+  - component: {fileID: 5049259247307291762}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -66,7 +67,7 @@ Transform:
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 4263290183433907419}
+  - {fileID: 6586898949530789951}
   - {fileID: 2776069865175213391}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -91,6 +92,7 @@ MonoBehaviour:
   - {fileID: 924480037533177669}
   - {fileID: 27206135183645212}
   - {fileID: 8364481035990828272}
+  - {fileID: 5049259247307291762}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &4626689783264709220
 MonoBehaviour:
@@ -109,6 +111,31 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!143 &3603182446017681866
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8587910293910979656}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.86, z: 0}
 --- !u!114 &924480037533177669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,90 +177,53 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
   bombPrefab: {fileID: 2401482565369207188, guid: 5174982384c007e488b21d909c4763f0, type: 3}
   bombSpawnPoint: {fileID: 2776069865175213391}
---- !u!143 &3603182446017681866
-CharacterController:
+--- !u!114 &5049259247307291762
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8587910293910979656}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.86, z: 0}
---- !u!1001 &4368639694716635952
-PrefabInstance:
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91e6e92fcabab2a4e87f9be28a01861b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSkinChanger
+  modelContainer: {fileID: 6586898949530789951}
+  skinModelPrefabs:
+  - {fileID: 919132149155446097, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
+  - {fileID: 919132149155446097, guid: 82a7fd8bcede92b45b090db93d460443, type: 3}
+  - {fileID: 919132149155446097, guid: 6ae81d5ae4fe73048828fd3ff0c3a01d, type: 3}
+  - {fileID: 919132149155446097, guid: 2ce4881fbb7acdb42be542d95b31caec, type: 3}
+  _SkinId: 0
+--- !u!1 &9106816954240943385
+GameObject:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 8426728923774947944}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-      propertyPath: m_Name
-      value: Mutant_Model
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
---- !u!4 &4263290183433907419 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-  m_PrefabInstance: {fileID: 4368639694716635952}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6586898949530789951}
+  m_Layer: 0
+  m_Name: ModelContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6586898949530789951
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9106816954240943385}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8426728923774947944}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

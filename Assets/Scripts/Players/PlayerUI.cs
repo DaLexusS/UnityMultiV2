@@ -2,73 +2,134 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Fusion;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
-    [SerializeField] private NetworkRunner netRunner;
+    private sealed class PlayerUIData 
+    {
+        public int MaxHp;
+        public int CurrentHp;
+        public string Nickname;
+    }
+
+    private readonly Dictionary<PlayerRef, PlayerUIData>
+        registeredPlayers = new();
+
+    private readonly Dictionary<PlayerRef, int>
+        playerSlots = new();
+    
     public static PlayerUI Instance { get; private set; }
     
     [SerializeField] private Slider[] hpBars;
-
-    private Dictionary<PlayerRef, Slider> playerSliders = new();
+    [SerializeField] private TextMeshProUGUI[] playerName;
+    
 
     private void Awake()
     {
         Instance = this;
     }
     
-    public void RefreshPlayers()
+
+    public void RegisterPlayer(
+        PlayerRef player,
+        int maxHp,
+        int currentHp,
+        string nickname)
     {
-        playerSliders.Clear();
-
-        foreach (Slider slider in hpBars)
-            slider.gameObject.SetActive(false);
-
-        List<PlayerRef> players = netRunner.ActivePlayers.OrderBy(player => player.PlayerId).ToList();
-
-        for (int i = 0; i < players.Count; i++)
+        registeredPlayers[player] = new PlayerUIData
         {
-            if (i >= hpBars.Length)
+            MaxHp = maxHp,
+            CurrentHp = currentHp,
+            Nickname = nickname
+        };
+
+        RebuildUI();
+    }
+
+    public void UnregisterPlayer(PlayerRef player)
+    {
+        registeredPlayers.Remove(player);
+        playerSlots.Remove(player);
+
+        RebuildUI();
+    }
+    
+    private void RebuildUI()
+    {
+        playerSlots.Clear();
+
+        for (int i = 0; i < hpBars.Length; i++)
+        {
+            if (hpBars[i] != null)
+                hpBars[i].gameObject.SetActive(false);
+        }
+
+        for (int i = 0; i < playerName.Length; i++)
+        {
+            if (playerName[i] != null)
+                playerName[i].gameObject.SetActive(false);
+        }
+
+        List<PlayerRef> sortedPlayers = registeredPlayers.Keys
+            .OrderBy(player => player.PlayerId)
+            .ToList();
+
+        int availableSlots = Mathf.Min(
+            hpBars.Length,
+            playerName.Length
+        );
+
+        for (int i = 0; i < sortedPlayers.Count; i++)
+        {
+            if (i >= availableSlots)
                 break;
 
-            PlayerRef player = players[i];
+            PlayerRef player = sortedPlayers[i];
+            PlayerUIData data = registeredPlayers[player];
+
             Slider slider = hpBars[i];
+            TextMeshProUGUI nicknameText = playerName[i];
 
-            playerSliders[player] = slider;
+            playerSlots[player] = i;
+
+            slider.maxValue = data.MaxHp;
+            slider.value = data.CurrentHp;
             slider.gameObject.SetActive(true);
+
+            nicknameText.text = data.Nickname;
+            nicknameText.gameObject.SetActive(true);
         }
     }
-
-    public void RegisterPlayer(PlayerRef pl, int maxValue)
-    {
-        RefreshPlayers();
-        
-        playerSliders[pl].maxValue = maxValue;
-        UpdateHealth(pl, maxValue);
-    }
-
-    public void UnRegisterPLayer(PlayerRef pl)
-    {
-        RefreshPlayers();
-    }
-
-    private Slider GetFreeSlider()
-    {
-        foreach (Slider slider in hpBars)
-        {
-            if (!playerSliders.ContainsValue(slider))
-                return slider;
-        }
-
-        ErrorHandlerUi.ReportError("No free health sliders!");
-        return null;
-    }
+    
 
     public void UpdateHealth(PlayerRef player, int value)
     {
-        playerSliders[player].value = value;
+        if (!registeredPlayers.TryGetValue(
+                player,
+                out PlayerUIData data))
+        {
+            return;
+        }
+
+        data.CurrentHp = value;
+
+        if (!playerSlots.TryGetValue(
+                player,
+                out int slotIndex))
+        {
+            return;
+        }
+
+        if (slotIndex < 0 ||
+            slotIndex >= hpBars.Length)
+        {
+            return;
+        }
+
+        hpBars[slotIndex].value = value;
     }
     
 }
