@@ -14,7 +14,7 @@ public class MessageSendMechanism : MonoBehaviour
     {
         if (ChatManager.Instance == null)
         {
-            Debug.LogError("ChatManager is not spawned yet");
+            ErrorHandlerUi.ReportError("Chat manager is not ready yet.");
             return;
         }
 

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
-    private NetworkRunner netRunner;
+    [SerializeField] private NetworkRunner netRunner;
     public static PlayerUI Instance { get; private set; }
     
     [SerializeField] private Slider[] hpBars;
@@ -17,7 +17,6 @@ public class PlayerUI : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        netRunner = NetworkManager.Instance.Runner;
     }
     
     public void RefreshPlayers()
@@ -54,7 +53,19 @@ public class PlayerUI : MonoBehaviour
     {
         RefreshPlayers();
     }
-    
+
+    private Slider GetFreeSlider()
+    {
+        foreach (Slider slider in hpBars)
+        {
+            if (!playerSliders.ContainsValue(slider))
+                return slider;
+        }
+
+        ErrorHandlerUi.ReportError("No free health sliders!");
+        return null;
+    }
+
     public void UpdateHealth(PlayerRef player, int value)
     {
         playerSliders[player].value = value;

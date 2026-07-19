@@ -22,7 +22,7 @@ public class NetWorkLobbyChatTest : MonoBehaviour, INetworkRunnerCallbacks
 
         if (!result.Ok)
         {
-            Debug.LogError(result.ShutdownReason);
+            ErrorHandlerUi.ReportError($"Failed to start chat test session: {result.ShutdownReason}");
         }
     }
 
@@ -68,12 +68,13 @@ public class NetWorkLobbyChatTest : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-      
+        if (shutdownReason != ShutdownReason.Ok)
+            ErrorHandlerUi.ReportError($"Network shutdown: {shutdownReason}");
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
-       
+        ErrorHandlerUi.ReportError($"Disconnected from server: {reason}");
     }
 
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
@@ -83,7 +84,7 @@ public class NetWorkLobbyChatTest : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
-      
+        ErrorHandlerUi.ReportError($"Connection failed: {reason}");
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)

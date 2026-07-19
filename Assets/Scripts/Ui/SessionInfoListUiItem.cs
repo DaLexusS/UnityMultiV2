@@ -7,10 +7,12 @@ using UnityEngine.Events;
 
 public class SessionInfoListUiItem : MonoBehaviour
 {
-    public static UnityAction<string> onSessionJoin;
+    public static UnityAction<SessionInfo> onSessionJoin;
     public TextMeshProUGUI sessionNameText;
     public TextMeshProUGUI sessionCountText;
     public TextMeshProUGUI sessionStatusText;
+    [SerializeField] private TextMeshProUGUI sessionModeText;
+    [SerializeField] private TextMeshProUGUI sessionMapText;
     public Button joinButton;
 
     SessionInfo sessionInfo;
@@ -20,6 +22,12 @@ public class SessionInfoListUiItem : MonoBehaviour
 
         sessionNameText.text = sessionInfo.Name;
         sessionCountText.text = $"{sessionInfo.PlayerCount}/{sessionInfo.MaxPlayers}";
+
+        if (sessionModeText != null)
+            sessionModeText.text = $"Mode : {GetSessionProperty(sessionInfo, SessionMetadata.GameModeKey)}";
+
+        if (sessionMapText != null)
+            sessionMapText.text = $"Map : {GetSessionProperty(sessionInfo, SessionMetadata.MapKey)}";
 
         bool isFull = sessionInfo.PlayerCount >= sessionInfo.MaxPlayers;
         bool isStarted = SessionMetadata.IsStarted(sessionInfo);
@@ -50,6 +58,11 @@ public class SessionInfoListUiItem : MonoBehaviour
         if (sessionInfo == null || !sessionInfo.IsOpen || SessionMetadata.IsStarted(sessionInfo) || sessionInfo.PlayerCount >= sessionInfo.MaxPlayers)
             return;
 
-        onSessionJoin.Invoke(sessionInfo.Name);
+        onSessionJoin?.Invoke(sessionInfo);
+    }
+
+    private static string GetSessionProperty(SessionInfo sessionInfo, string key)
+    {
+        return SessionMetadata.TryGetValue(sessionInfo, key, out string value) ? value : "Default";
     }
 }
