@@ -1,5 +1,6 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : NetworkBehaviour
 {
@@ -33,13 +34,10 @@ public class PlayerHealth : NetworkBehaviour
         );
     }
 
-    public override void Despawned(
-        NetworkRunner runner,
-        bool hasState)
+    public override void Despawned(NetworkRunner runner, bool hasState)
     {
-        PlayerUI.Instance?.UnregisterPlayer(
-            Object.InputAuthority
-        );
+        PlayerUI.Instance?.UnregisterPlayer(Object.InputAuthority);
+        
     }
 
     [Rpc]
@@ -66,7 +64,21 @@ public class PlayerHealth : NetworkBehaviour
     {
         CurrentHp = Mathf.Clamp(CurrentHp, 0, MaxHp);
         PlayerUI.Instance.UpdateHealth(Object.InputAuthority, CurrentHp);
+
+        if (CurrentHp <= 0)
+        {
+           Die();
+        }
+    }
+    
+    
+    private void Die()
+    {
+        if (!Object.HasStateAuthority) return;
         
+        PointsCountManager.Instance?.RPC_PlayerDied(Object.InputAuthority);
+
+        Runner.Despawn(Object);
     }
     
 }
