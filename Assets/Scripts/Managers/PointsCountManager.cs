@@ -192,4 +192,6 @@ public class PointsCountManager : NetworkBehaviour
     {
         return playerPoints;
     }
+
+   
 }

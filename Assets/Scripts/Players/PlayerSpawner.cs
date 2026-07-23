@@ -62,11 +62,7 @@ public class PlayerSpawner : NetworkBehaviour
         {
             return;
         }
-
-        /*
-         * ReadyManager may appear slightly later
-         * after the gameplay scene is loaded.
-         */
+        
         while (ReadyManager.Instance == null)
         {
             await Awaitable.NextFrameAsync();
@@ -366,5 +362,10 @@ public class PlayerSpawner : NetworkBehaviour
         PointsCountManager.Instance.RPC_RegisterPlayer(
             player
         );
+    }
+    
+    public void ExitTheGAmeToMenu()
+    {
+        Runner.LoadScene("LobbyScene");
     }
 }
