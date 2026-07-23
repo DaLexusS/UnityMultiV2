@@ -48,7 +48,7 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 0}
   - {fileID: 0}
-  playerPrefab: {fileID: 27206135183645212, guid: bccdd6daf765e9f4a8f394ddfa96f37e, type: 3}
+  playerPrefab: {fileID: 0}
 --- !u!114 &4229299578514962904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
   SortKey: 3446951453
   ObjectInterest: 1
-  Flags: 262145
+  Flags: 131073
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4935977747369322603}

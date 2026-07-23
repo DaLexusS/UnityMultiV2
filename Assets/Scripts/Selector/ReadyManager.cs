@@ -20,8 +20,9 @@ public class ReadyManager : NetworkBehaviour
 
     public static event Action OnReadyStateChanged;
 
-    [Header("Scene loading")]
+
     [SerializeField] private int gameplaySceneBuildIndex;
+    [SerializeField] private int chatSceneBuildIndex;
     
     [Networked, Capacity(MaxPlayers)] public NetworkArray<int> SelectedSkins => default;
     
@@ -149,13 +150,7 @@ public class ReadyManager : NetworkBehaviour
         int skinIndex = selectedSkin - 1;
         int currentSkinOwner = LockedSkinOwners.Get(skinIndex);
         int requestingPlayerKey = info.Source.RawEncoded;
-
-        /*
-         * Two players may have selected the same skin before
-         * either of them pressed Ready.
-         *
-         * The first Ready request processed by StateAuthority wins.
-         */
+        
         if (currentSkinOwner != 0 &&
             currentSkinOwner != requestingPlayerKey)
         {
@@ -163,11 +158,7 @@ public class ReadyManager : NetworkBehaviour
                 info.Source,
                 ReadyDeniedReason.SkinAlreadyTaken
             );
-
-            /*
-             * The selected skin stays selected visually.
-             * Ready becomes disabled until another skin is selected.
-             */
+            
             MarkStateChanged();
             return;
         }
@@ -298,11 +289,7 @@ public class ReadyManager : NetworkBehaviour
 
         MarkStateChanged();
     }
-
-    /*
-     * Called after LobbyPlayers has been updated.
-     * For example, when an unready player leaves the lobby.
-     */
+    
     public void EvaluateAllPlayersReady()
     {
         if (!Object.HasStateAuthority)
@@ -353,11 +340,7 @@ public class ReadyManager : NetworkBehaviour
             {
                 return;
             }
-
-            /*
-             * A ready player must really own
-             * their selected skin.
-             */
+            
             int skinOwner =
                 LockedSkinOwners.Get(selectedSkin - 1);
 
@@ -371,11 +354,7 @@ public class ReadyManager : NetworkBehaviour
         {
             return;
         }
-
-        /*
-         * Prevent the host from loading before a newly connected
-         * player finishes nickname/lobby registration.
-         */
+        
         int activePlayersCount =
             Runner.ActivePlayers.Count();
 
@@ -409,10 +388,8 @@ public class ReadyManager : NetworkBehaviour
         SceneLoadStarted = true;
         MarkStateChanged();
 
-        Runner.LoadScene(
-            SceneRef.FromIndex(gameplaySceneBuildIndex),
-            LoadSceneMode.Single
-        );
+        Runner.LoadScene(SceneRef.FromIndex(gameplaySceneBuildIndex), LoadSceneMode.Single);
+        Runner.LoadScene(SceneRef.FromIndex(chatSceneBuildIndex), LoadSceneMode.Additive);
     }
 
     private bool IsReadyAtSlot(int playerSlot)

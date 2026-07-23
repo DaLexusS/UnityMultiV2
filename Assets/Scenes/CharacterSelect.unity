@@ -580,6 +580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReadyManager
   gameplaySceneBuildIndex: 2
+  chatSceneBuildIndex: 3
   _SelectedSkins: 
   _ReadyStates: 
   _LockedSkinOwners: 
