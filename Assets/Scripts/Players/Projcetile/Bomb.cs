@@ -8,14 +8,23 @@ public class Bomb : NetworkBehaviour
     [SerializeField] private int damage;
     [SerializeField] private GameObject visual;
     [SerializeField] private ParticleSystem explosionPartical;
+    [SerializeField] private Rigidbody rb;
     
     public bool CanFly { get; set; }
+    private Vector3 flyDirection;
+
+    public override void Spawned()
+    {
+        rb.useGravity = false;
+        flyDirection = transform.forward;
+    }
 
     public override void FixedUpdateNetwork()
     {
-        base.FixedUpdateNetwork();
         if (Object.HasStateAuthority && CanFly)
-            transform.Translate(Vector3.forward * flySpeed * Runner.DeltaTime);
+        {
+            rb.linearVelocity = flyDirection * flySpeed;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -49,6 +58,9 @@ public class Bomb : NetworkBehaviour
     private async void BombDestruction(GameObject gameObject)
     {
         CanFly = false;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        
         RPCPlayExplosion();
         
         await Awaitable.WaitForSecondsAsync(2f);

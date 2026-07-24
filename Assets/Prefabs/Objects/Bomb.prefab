@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 2522515863054190277}
   - component: {fileID: 2401482565369207188}
   - component: {fileID: 9182227969795591274}
-  - component: {fileID: 6372352635622418803}
+  - component: {fileID: 8905018247377182175}
+  - component: {fileID: 4126586207468393360}
   m_Layer: 0
   m_Name: Bomb
   m_TagString: Untagged
@@ -74,6 +75,7 @@ MonoBehaviour:
   damage: 50
   visual: {fileID: 4529523641812085076}
   explosionPartical: {fileID: 3195140550261521896}
+  rb: {fileID: 8905018247377182175}
 --- !u!114 &9182227969795591274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,9 +94,36 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 2401482565369207188}
-  - {fileID: 6372352635622418803}
+  - {fileID: 4126586207468393360}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &6372352635622418803
+--- !u!54 &8905018247377182175
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5708635274354358373}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &4126586207468393360
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,14 +132,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 5708635274354358373}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  m_EditorClassIdentifier: Fusion.Addons.Physics::Fusion.Addons.Physics.NetworkRigidbody3D
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
 --- !u!1001 &305047594610518497
 PrefabInstance:
   m_ObjectHideFlags: 0
