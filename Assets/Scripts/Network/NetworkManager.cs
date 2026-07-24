@@ -208,9 +208,15 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void CloseSessionForEveryone()
     {
-        if (!networkRunner.IsRunning || !networkRunner.SessionInfo.IsValid || !networkRunner.IsSharedModeMasterClient)
+        if (!networkRunner.IsRunning || !networkRunner.SessionInfo.IsValid)
         {
-            ReportServerError("Only the host can close this session.");
+            LeaveSession();
+            return;
+        }
+
+        if (!networkRunner.IsSharedModeMasterClient)
+        {
+            LeaveSession();
             return;
         }
 

@@ -164,6 +164,12 @@ public class PointsCountManager : NetworkBehaviour
 
     private async void CloseRoomAfterResults()
     {
+        if (!Object.HasStateAuthority ||
+            !Runner.IsSharedModeMasterClient)
+        {
+            return;
+        }
+
         await Awaitable.WaitForSecondsAsync(5f);
 
         NetworkManager.Instance?.CloseSessionForEveryone();
