@@ -366,6 +366,12 @@ public class PlayerSpawner : NetworkBehaviour
     
     public void ExitTheGAmeToMenu()
     {
-        Runner.LoadScene("LobbyScene");
+        if (NetworkManager.Instance != null)
+        {
+            NetworkManager.Instance.LeaveSession();
+            return;
+        }
+
+        Runner.Shutdown();
     }
 }
