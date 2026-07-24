@@ -166,7 +166,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.Shared,
             SessionName = sessionName,
-            PlayerCount = Mathf.Clamp(playerCount, 2, 4),
+            PlayerCount = Mathf.Clamp(playerCount, 3, 4),
             OnGameStarted = OnGameStarted,
             CustomLobbyName = GetCurrentLobbyName(),
             SceneManager = sceneManager,

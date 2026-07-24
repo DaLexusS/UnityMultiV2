@@ -44,7 +44,7 @@ public class SessionListUiHandler : MonoBehaviour
     [SerializeField] private TMP_InputField joinPasswordInputField;
     [SerializeField] private GameObject joinPasswordFieldObject;
     [SerializeField] private GameObject joinPasswordTitleObject;
-    [SerializeField] private int minPlayerCount = 2;
+    [SerializeField] private int minPlayerCount = 3;
     [SerializeField] private int maxPlayerCount = 4;
     [SerializeField] private TMP_Dropdown searchGameModeDropdown;
     [SerializeField] private TMP_Dropdown preferredMapDropdown;
