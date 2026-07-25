@@ -1,5 +1,59 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &615477039266810504
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6947661419703778192}
+  - component: {fileID: 2508174250675647660}
+  m_Layer: 0
+  m_Name: BakeAnimator_Plug
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6947661419703778192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 615477039266810504}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8426728923774947944}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2508174250675647660
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 615477039266810504}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 50a782b60ec87ee4a98822963c07bd84, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2569215393082694243
 GameObject:
   m_ObjectHideFlags: 0
@@ -47,6 +101,8 @@ GameObject:
   - component: {fileID: 27206135183645212}
   - component: {fileID: 8364481035990828272}
   - component: {fileID: 5049259247307291762}
+  - component: {fileID: 6416476552070402267}
+  - component: {fileID: 8444395466383096995}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -69,6 +125,7 @@ Transform:
   m_Children:
   - {fileID: 6586898949530789951}
   - {fileID: 2776069865175213391}
+  - {fileID: 6947661419703778192}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3158042016697491571
@@ -93,6 +150,7 @@ MonoBehaviour:
   - {fileID: 27206135183645212}
   - {fileID: 8364481035990828272}
   - {fileID: 5049259247307291762}
+  - {fileID: 6416476552070402267}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &4626689783264709220
 MonoBehaviour:
@@ -196,6 +254,36 @@ MonoBehaviour:
   - {fileID: 919132149155446097, guid: 6ae81d5ae4fe73048828fd3ff0c3a01d, type: 3}
   - {fileID: 919132149155446097, guid: 2ce4881fbb7acdb42be542d95b31caec, type: 3}
   _SkinId: 0
+--- !u!114 &6416476552070402267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8587910293910979656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkMecanimAnimator
+  Animator: {fileID: 2508174250675647660}
+  ApplyTiming: 2
+  SyncSettings: 79
+  StateHashes: 000000002b1a167c794069558b7cfd670f5f2b88336e528eb1211e0ba1609f62d8aa0cc42afa8626a8b5caa3
+  TriggerHashes: 00000000
+  TotalWords: 0
+--- !u!114 &8444395466383096995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8587910293910979656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be409c786052cf45b16b54b424703c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimatorController
 --- !u!1 &9106816954240943385
 GameObject:
   m_ObjectHideFlags: 0
