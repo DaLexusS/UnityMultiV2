@@ -208,6 +208,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   speed: 2.5
   rotationSpeed: 50
+  _playerAnimator: {fileID: 8444395466383096995}
+  _CanMove:
+    _value: 0
 --- !u!114 &27206135183645212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -233,8 +236,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0876e33ebd1ebab49a21700ecb603ea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
+  _playerAnimator: {fileID: 8444395466383096995}
   bombPrefab: {fileID: 2401482565369207188, guid: 5174982384c007e488b21d909c4763f0, type: 3}
   bombSpawnPoint: {fileID: 2776069865175213391}
+  coolDown: 1.5
 --- !u!114 &5049259247307291762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,11 +253,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkinChanger
   modelContainer: {fileID: 6586898949530789951}
+  _animatorController: {fileID: 8444395466383096995}
   skinModelPrefabs:
-  - {fileID: 919132149155446097, guid: 1b230cae14b73464da29ba63e03822f0, type: 3}
-  - {fileID: 919132149155446097, guid: 82a7fd8bcede92b45b090db93d460443, type: 3}
-  - {fileID: 919132149155446097, guid: 6ae81d5ae4fe73048828fd3ff0c3a01d, type: 3}
-  - {fileID: 919132149155446097, guid: 2ce4881fbb7acdb42be542d95b31caec, type: 3}
+  - {fileID: 6888675718789894554, guid: e6ce4fef1cee51c42913cad5439bc9aa, type: 3}
+  - {fileID: 4802440354694840903, guid: 8a9d3d0e663b42a40a92f4f374b34f1c, type: 3}
+  - {fileID: 8938462188257951300, guid: e03e64c7f480bc74faa843f4edd4e7be, type: 3}
+  - {fileID: 1894016459564040221, guid: 11e8bc3566ddc5e4398de3d8165f2232, type: 3}
   _SkinId: 0
 --- !u!114 &6416476552070402267
 MonoBehaviour:
@@ -270,8 +276,8 @@ MonoBehaviour:
   ApplyTiming: 2
   SyncSettings: 79
   StateHashes: 000000002b1a167c794069558b7cfd670f5f2b88336e528eb1211e0ba1609f62d8aa0cc42afa8626a8b5caa3
-  TriggerHashes: 00000000
-  TotalWords: 0
+  TriggerHashes: 00000000d0714fe07b3624fb4dfd2ea2
+  TotalWords: 1
 --- !u!114 &8444395466383096995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,6 +290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9be409c786052cf45b16b54b424703c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimatorController
+  networkAnimator: {fileID: 6416476552070402267}
 --- !u!1 &9106816954240943385
 GameObject:
   m_ObjectHideFlags: 0

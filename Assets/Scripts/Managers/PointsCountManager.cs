@@ -68,11 +68,6 @@ public class PointsCountManager : NetworkBehaviour
         alivePlayers.Add(player, true);
 
         AlivePlayersCount++;
-
-        Debug.Log(
-            $"{player} registered. " +
-            $"Alive players: {AlivePlayersCount}"
-        );
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]

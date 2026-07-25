@@ -8,7 +8,6 @@ public class ChatManager : NetworkBehaviour
     public override void Spawned()
     {
         Instance = this;
-        Debug.Log("ChatManager initialized by Fusion");
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]

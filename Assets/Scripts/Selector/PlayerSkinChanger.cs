@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerSkinChanger : NetworkBehaviour
 {
     [SerializeField] private Transform modelContainer;
+    [SerializeField] private PlayerAnimatorController _animatorController;
     
     [SerializeField] private GameObject[] skinModelPrefabs = new GameObject[ReadyManager.SkinCount];
 
@@ -100,6 +101,11 @@ public class PlayerSkinChanger : NetworkBehaviour
             false
         );
 
+        Animator skinAnimator =
+            CurrentModel.GetComponentInChildren<Animator>();
+        
+        _animatorController.SetAnimator(skinAnimator);
+        
         ResetModelTransform();
 
         CurrentAnimator =
