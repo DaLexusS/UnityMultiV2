@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerCombat : NetworkBehaviour
 {
+    [SerializeField] private PlayerMovement _playerMovement;
     [SerializeField] private PlayerAnimatorController _playerAnimator;
     [SerializeField] private Bomb bombPrefab;
 
@@ -15,7 +16,7 @@ public class PlayerCombat : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
-        if (!bombIsSpawned && Keyboard.current.spaceKey.isPressed)
+        if (!bombIsSpawned && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
            Attack();
         }
@@ -24,6 +25,7 @@ public class PlayerCombat : NetworkBehaviour
     private void Attack()
     {
         _playerAnimator.ActivateAttackAnimation();
+        _playerMovement.StopMovement();
     }
 
     public async void SpawnBomb()

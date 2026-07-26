@@ -9,8 +9,7 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private PlayerAnimatorController _playerAnimator;
 
     [Networked] public NetworkBool CanMove { get; private set; }
-    private Quaternion movementRotation = Quaternion.identity;
-    
+   
     public override void Spawned()
     {
         if (Object.HasStateAuthority)
@@ -24,45 +23,26 @@ public class PlayerMovement : NetworkBehaviour
         if (!CanMove) return;
         
         
-        float horizontal = 0f;
-        float vertical = 0f;
-        float rotation = 0f;
-
+        Vector3 rotationVector = Vector3.zero;
+        Vector3 movementVector = Vector3.zero;
         if (Keyboard.current.wKey.isPressed)
-            vertical += 1f;
-
+            movementVector = Vector3.forward;
         if (Keyboard.current.sKey.isPressed)
-            vertical -= 1f;
-
+            movementVector = Vector3.back;
         if (Keyboard.current.aKey.isPressed)
-            horizontal -= 1f;
-
+            movementVector = Vector3.left;
         if (Keyboard.current.dKey.isPressed)
-            horizontal += 1f;
-
-        if (Keyboard.current.qKey.isPressed)
-            rotation -= 1f;
-
-        if (Keyboard.current.eKey.isPressed)
-            rotation += 1f;
-
-        Vector3 inputDirection =
-            new Vector3(horizontal, 0f, vertical).normalized;
-
-        Vector3 movementDirection =
-            movementRotation * inputDirection;
-
-        transform.Rotate(
-            Vector3.up,
-            rotation * rotationSpeed * Runner.DeltaTime,
-            Space.World
-        );
-
-        transform.position +=
-            movementDirection * speed * Runner.DeltaTime;
+            movementVector = Vector3.right;
+        if(Keyboard.current.qKey.isPressed)
+            rotationVector += Vector3.down;
+        if(Keyboard.current.eKey.isPressed)
+            rotationVector += Vector3.up;
+            
+        transform.Rotate(rotationVector * (rotationSpeed * Runner.DeltaTime));
+        transform.Translate(movementVector * speed * Runner.DeltaTime);
         
         
-        _playerAnimator.SetWalkingAnimation(movementDirection.sqrMagnitude > 0f);
+        _playerAnimator.SetWalkingAnimation(movementVector.sqrMagnitude > 0f);
     }
     
     
@@ -73,5 +53,13 @@ public class PlayerMovement : NetworkBehaviour
 
         CanMove = false;
         _playerAnimator.SetWalkingAnimation(false);
+    }
+    
+    public void EnableMovement()
+    {
+        if (!Object.HasStateAuthority)
+            return;
+
+        CanMove = true;
     }
 }

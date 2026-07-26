@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class PlayerSkinChanger : NetworkBehaviour
 {
+    [SerializeField] private PlayerMovement _playerMovement;
+    [SerializeField] private PlayerCombat _playerCombat;
+    [SerializeField] private PlayerHealth _playerHealth;
+    
     [SerializeField] private Transform modelContainer;
     [SerializeField] private PlayerAnimatorController _animatorController;
     
@@ -101,15 +105,16 @@ public class PlayerSkinChanger : NetworkBehaviour
             false
         );
 
-        Animator skinAnimator =
-            CurrentModel.GetComponentInChildren<Animator>();
+        Animator skinAnimator = CurrentModel.GetComponentInChildren<Animator>();
         
         _animatorController.SetAnimator(skinAnimator);
+
+        SkinAnimatorEventer skinAnimatorEventer = CurrentModel.GetComponentInChildren<SkinAnimatorEventer>();
+        skinAnimatorEventer.Initialize(_playerMovement, _playerCombat, _playerHealth);
         
         ResetModelTransform();
 
-        CurrentAnimator =
-            CurrentModel.GetComponentInChildren<Animator>();
+        CurrentAnimator = skinAnimator;
 
         appliedSkinId = SkinId;
     }

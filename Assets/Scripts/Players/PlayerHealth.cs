@@ -4,9 +4,11 @@ using UnityEngine.UI;
 
 public class PlayerHealth : NetworkBehaviour
 {
+    [SerializeField] private PlayerMovement _playerMovement;
+    [SerializeField] private PlayerAnimatorController _playerAnimator;
     private int MaxHp = 100;
 
-    [Networked, OnChangedRender(nameof(CheckHealthAfterChanged))] [field: SerializeField]
+    [Networked, OnChangedRender(nameof(UpdateHealthUI))] [field: SerializeField]
     public int CurrentHp
     {
         get;
@@ -56,19 +58,25 @@ public class PlayerHealth : NetworkBehaviour
         {
             CurrentHp -= damage;
             CheckHealthAfterChanged();
+            UpdateHealthUI();
         }
+    }
+
+    private void UpdateHealthUI()
+    {
+        CurrentHp = Mathf.Clamp(CurrentHp, 0, MaxHp);
+        PlayerUI.Instance.UpdateHealth(Object.InputAuthority, CurrentHp);
     }
 
 
     private void CheckHealthAfterChanged()
     {
-        CurrentHp = Mathf.Clamp(CurrentHp, 0, MaxHp);
-        PlayerUI.Instance.UpdateHealth(Object.InputAuthority, CurrentHp);
-
+        _playerMovement.StopMovement();
+        
         if (CurrentHp <= 0)
-        {
            Die();
-        }
+        else 
+            _playerAnimator.ActivateHitAnimation();
     }
     
     
@@ -77,7 +85,12 @@ public class PlayerHealth : NetworkBehaviour
         if (!Object.HasStateAuthority) return;
         
         PointsCountManager.Instance?.RPC_PlayerDied(Object.InputAuthority);
+        
+        _playerAnimator.ActivateDeathAnimation();
+    }
 
+    public void AnimationDeathEvent()
+    {
         Runner.Despawn(Object);
     }
     
