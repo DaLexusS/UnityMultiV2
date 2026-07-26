@@ -154,6 +154,20 @@ public class PointsCountManager : NetworkBehaviour
         ResultsShown = true;
 
         RPC_ShowResults();
+        CloseRoomAfterResults();
+    }
+
+    private async void CloseRoomAfterResults()
+    {
+        if (!Object.HasStateAuthority ||
+            !Runner.IsSharedModeMasterClient)
+        {
+            return;
+        }
+
+        await Awaitable.WaitForSecondsAsync(5f);
+
+        NetworkManager.Instance?.CloseSessionForEveryone();
     }
 
     private PlayerRef FindAlivePlayer()

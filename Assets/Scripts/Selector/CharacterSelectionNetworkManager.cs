@@ -147,6 +147,50 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
             .EvaluateAllPlayersReady();
     }
 
+    public void RefreshMasterClientState()
+    {
+        if (!Object.HasStateAuthority ||
+            !Runner.IsSharedModeMasterClient)
+        {
+            return;
+        }
+
+        bool stateChanged = false;
+
+        if (HostPlayer != Runner.LocalPlayer)
+        {
+            HostPlayer = Runner.LocalPlayer;
+            stateChanged = true;
+        }
+
+        List<PlayerRef> activePlayers =
+            Runner.ActivePlayers.ToList();
+
+        for (int i = 0; i < LobbyPlayers.Length; i++)
+        {
+            PlayerRef player = LobbyPlayers.Get(i);
+
+            if (player == PlayerRef.None ||
+                activePlayers.Contains(player))
+            {
+                continue;
+            }
+
+            ReadyManager.Instance?
+                .RemovePlayerState(player, i);
+
+            LobbyPlayers.Set(i, PlayerRef.None);
+            LobbyPlayerNicknames.Set(i, string.Empty);
+            stateChanged = true;
+        }
+
+        if (!stateChanged)
+            return;
+
+        RPC_LobbyPlayersChanged();
+        ReadyManager.Instance?.EvaluateAllPlayersReady();
+    }
+
     public List<LobbyPlayerInfo> GetLobbyPlayers()
     {
         List<LobbyPlayerInfo> players = new();

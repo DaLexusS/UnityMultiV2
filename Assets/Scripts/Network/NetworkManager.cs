@@ -20,6 +20,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     private string _currentLobbyName;
     private bool _isJoiningLobby;
     private bool _isIntentionalShutdown;
+    private bool _lastKnownHostState;
+    private bool _hasKnownHostState;
 
     public NetworkRunner Runner => networkRunner;
     public string LocalPlayerNickname { get; private set; }
@@ -164,7 +166,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.Shared,
             SessionName = sessionName,
-            PlayerCount = Mathf.Clamp(playerCount, 2, 4),
+            PlayerCount = Mathf.Clamp(playerCount, 3, 4),
             OnGameStarted = OnGameStarted,
             CustomLobbyName = GetCurrentLobbyName(),
             SceneManager = sceneManager,
@@ -199,14 +201,22 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             IsCurrentSessionPasswordProtected(),
             GetCurrentSessionProperty(SessionMetadata.PasswordKey, string.Empty)));
 
+        BroadcastMatchSettingsJson();
+
         await networkRunner.LoadScene(SceneRef.FromIndex(1));
     }
 
     public void CloseSessionForEveryone()
     {
-        if (!networkRunner.IsRunning || !networkRunner.SessionInfo.IsValid || !networkRunner.IsSharedModeMasterClient)
+        if (!networkRunner.IsRunning || !networkRunner.SessionInfo.IsValid)
         {
-            ReportServerError("Only the host can close this session.");
+            LeaveSession();
+            return;
+        }
+
+        if (!networkRunner.IsSharedModeMasterClient)
+        {
+            LeaveSession();
             return;
         }
 
@@ -262,6 +272,26 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         return SessionMetadata.TryGetValue(networkRunner.SessionInfo, key, out string value) ? value : fallback;
     }
 
+    private void BroadcastMatchSettingsJson()
+    {
+        MatchSettingsSync settingsSync = MatchSettingsSync.Instance;
+
+        if (settingsSync == null)
+        {
+            ReportServerError("Could not send match settings. Settings manager is not ready.");
+            return;
+        }
+
+        settingsSync.BroadcastSettings(new MatchSettingsJson
+        {
+            GameMode = GetCurrentSessionProperty(SessionMetadata.GameModeKey, "Default"),
+            Map = GetCurrentSessionProperty(SessionMetadata.MapKey, "Default"),
+            Region = GetCurrentSessionProperty(SessionMetadata.RegionKey, "Default"),
+            MaxPlayers = networkRunner.SessionInfo.MaxPlayers,
+            PasswordProtected = IsCurrentSessionPasswordProtected()
+        });
+    }
+
     private bool IsCurrentSessionPasswordProtected()
     {
         return GetCurrentSessionProperty(SessionMetadata.PasswordProtectedKey, "false") == "true";
@@ -293,8 +323,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnGameStarted(NetworkRunner obj)
     {
-        bool isHost = networkRunner.IsSharedModeMasterClient;
-        onHostCheck?.Invoke(isHost);
+        RefreshHostState(true, "Game started");
         
         if (networkRunner.IsSharedModeMasterClient)
         {
@@ -322,6 +351,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (player == runner.LocalPlayer)
             SubmitLocalNickname();
+
+        RefreshHostState(false, "Player joined");
     }
 
     void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -330,7 +361,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             CharacterSelectionNetworkManager.Instance.RemovePlayer(player);
 
         onLocalPlayerJoined?.Invoke(runner.SessionInfo);
-
+        RefreshHostState(true, "Player left");
     }
 
     void INetworkRunnerCallbacks.OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
@@ -407,14 +438,37 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     void INetworkRunnerCallbacks.OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
-        
+        RefreshHostState(true, "Host migration");
     }
 
     void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner)
     {
-        
+        RefreshHostState(true, "Scene load done");
     }
 
     void INetworkRunnerCallbacks.OnSceneLoadStart(NetworkRunner runner)
     {    }
+
+    private void RefreshHostState(bool forceNotify, string reason)
+    {
+        if (networkRunner == null || !networkRunner.IsRunning)
+            return;
+
+        bool isHost = networkRunner.IsSharedModeMasterClient;
+        bool changed = !_hasKnownHostState || _lastKnownHostState != isHost;
+
+        _hasKnownHostState = true;
+        _lastKnownHostState = isHost;
+
+        if (changed || forceNotify)
+            onHostCheck?.Invoke(isHost);
+
+        if (!isHost)
+            return;
+
+        CharacterSelectionNetworkManager.Instance?.RefreshMasterClientState();
+        ReadyManager.Instance?.EvaluateAllPlayersReady();
+
+        Debug.Log($"Host state refreshed: {reason}");
+    }
 }

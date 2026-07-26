@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2529157607395023308}
   - component: {fileID: 8819219452919469331}
+  - component: {fileID: 1243829924651938442}
   - component: {fileID: 6265060524603562993}
   m_Layer: 0
   m_Name: CharSelManager
@@ -46,6 +47,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSelectionNetworkManager
   _TakenCharacters: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
+--- !u!114 &1243829924651938442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570693486158702778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a2b4a3e7bb942c488f5c11a302c2d3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MatchSettingsSync
 --- !u!114 &6265060524603562993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,4 +77,5 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 8819219452919469331}
+  - {fileID: 1243829924651938442}
   ForceRemoteRenderTimeframe: 0

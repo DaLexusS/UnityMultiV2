@@ -17426,7 +17426,7 @@ MonoBehaviour:
   joinPasswordInputField: {fileID: 5003469174661204248}
   joinPasswordFieldObject: {fileID: 8877042501480003604}
   joinPasswordTitleObject: {fileID: 3396371983768583647}
-  minPlayerCount: 2
+  minPlayerCount: 3
   maxPlayerCount: 4
   searchGameModeDropdown: {fileID: 1047882314050196888}
   preferredMapDropdown: {fileID: 6820524459590919596}
