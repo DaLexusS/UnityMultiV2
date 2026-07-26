@@ -51,8 +51,9 @@ public class Bomb : NetworkBehaviour
             {
                 BombDestruction(other.gameObject);
             }
-            
         }
+        
+        
     }
 
     private async void BombDestruction(GameObject gameObject)

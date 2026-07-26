@@ -1,7 +1,8 @@
 using Fusion;
 using UnityEngine;
+using Object = System.Object;
 
-public class PlayerAnimatorController : MonoBehaviour
+public class PlayerAnimatorController : NetworkBehaviour
 {
    
    [SerializeField] private NetworkMecanimAnimator networkAnimator;
@@ -29,13 +30,40 @@ public class PlayerAnimatorController : MonoBehaviour
 
    public void ActivateHitAnimation()
    {
-      Animator.SetTrigger(HIT_TRIGGER);
+      if (!!Object.HasStateAuthority) return;
+      
+      RPC_ActivateHitAnimation();
    }
+   
    public void ActivateAttackAnimation()
+   {
+      if (!Object.HasStateAuthority) return;
+      
+      RPC_ActivateAttackAnimation();
+   }
+   
+   public void ActivateDeathAnimation()
+   {
+      if (!Object.HasStateAuthority) return;
+      
+      RPC_ActivateDeathAnimation();
+   }
+   
+   
+   [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+   private void RPC_ActivateAttackAnimation()
    {
       Animator.SetTrigger(ATTACK_TRIGGER);
    }
-   public void ActivateDeathAnimation()
+
+   [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+   private void RPC_ActivateHitAnimation()
+   {
+      Animator.SetTrigger(HIT_TRIGGER);
+   }
+
+   [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+   private void RPC_ActivateDeathAnimation()
    {
       Animator.SetTrigger(DEATH_TRIGGER);
    }
