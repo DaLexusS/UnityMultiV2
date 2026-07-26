@@ -19,7 +19,7 @@ public class ChatUIManager : MonoBehaviour
       Instance = this;
    }
 
-   public void AddMessage(PlayerRef sender, string message)
+   public void AddMessage(string sender, string message)
    {
       TextMeshProUGUI newTextMessage = Instantiate(textMessagePrefab, content);
       newTextMessage.text = $"{sender} : {message}";

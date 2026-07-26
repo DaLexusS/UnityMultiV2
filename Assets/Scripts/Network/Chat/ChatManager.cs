@@ -13,26 +13,31 @@ public class ChatManager : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_SendMessageToServer(PlayerRef sender, PlayerRef targetPlayer, string message)
     {
+        
+        string nickname =
+            CharacterSelectionNetworkManager.Instance
+                .GetPlayerNickname(sender);
+        
         if (targetPlayer == PlayerRef.None)
         {
-            RPC_ReceiveMessageAll(sender, message);
+            RPC_ReceiveMessageAll(nickname, message);
         }
         else
         {
-            RPC_ReceiveMessagePersonal(targetPlayer, sender, message);
+            RPC_ReceiveMessagePersonal(targetPlayer, nickname, message);
         }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_ReceiveMessageAll(PlayerRef sender, string message)
+    private void RPC_ReceiveMessageAll(string nickname, string message)
     {
-        ChatUIManager.Instance.AddMessage(sender, message);
+        ChatUIManager.Instance.AddMessage(nickname, message);
     }
     
    
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_ReceiveMessagePersonal( [RpcTarget] PlayerRef targetPlayer, PlayerRef sender, string message)
+    private void RPC_ReceiveMessagePersonal( [RpcTarget] PlayerRef targetPlayer, string nickname, string message)
     {
-        ChatUIManager.Instance.AddMessage(sender, message);
+        ChatUIManager.Instance.AddMessage(nickname, message);
     }
 }

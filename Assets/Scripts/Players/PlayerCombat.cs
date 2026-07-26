@@ -13,12 +13,14 @@ public class PlayerCombat : NetworkBehaviour
     private bool bombIsSpawned;
     private Bomb currentbomb;
 
-    public override void FixedUpdateNetwork()
+    public void Update()
     {
-        base.FixedUpdateNetwork();
-        if (!bombIsSpawned && Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (!Object.HasStateAuthority) return;
+        if (bombIsSpawned) return;
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-           Attack();
+            Attack();
         }
     }
 
