@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0f99596f754575340b3edc27ed75ddf0
+timeCreated: 1525732542
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118271
+  packageName: Desert Valley Materials
+  packageVersion: 1.0
+  assetPath: Assets/Desert Valley Materials/Materials/desDirtGrnd_light_mat.mat
+  uploadId: 244479

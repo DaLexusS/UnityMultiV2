@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 90a063335d6b6c94f879b9cb246f4f8f
+timeCreated: 1525732929
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 25800000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118271
+  packageName: Desert Valley Materials
+  packageVersion: 1.0
+  assetPath: Assets/Desert Valley Materials/Scenes/overview/LightingData.asset
+  uploadId: 244479

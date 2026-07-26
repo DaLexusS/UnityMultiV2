@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: e8b508f349eeefb46b01f3979c0cf142
+timeCreated: 1525732542
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118271
+  packageName: Desert Valley Materials
+  packageVersion: 1.0
+  assetPath: Assets/Desert Valley Materials/Materials/desRockWall_lightB_mat.mat
+  uploadId: 244479

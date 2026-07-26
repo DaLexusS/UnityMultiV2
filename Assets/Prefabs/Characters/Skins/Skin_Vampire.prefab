@@ -59,6 +59,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ae81d5ae4fe73048828fd3ff0c3a01d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6177467108016251226}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ae81d5ae4fe73048828fd3ff0c3a01d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 721261234634020131}
   m_SourcePrefab: {fileID: 100100000, guid: 6ae81d5ae4fe73048828fd3ff0c3a01d, type: 3}
 --- !u!1 &8938462188257951300 stripped
 GameObject:
@@ -87,3 +90,15 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &721261234634020131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8938462188257951300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2762d4258655a4c834f6dae31fe15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkinAnimatorEventer

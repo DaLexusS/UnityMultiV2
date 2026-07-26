@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: bf563c487266f14478bee4c168023a6e
+timeCreated: 1525732542
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118271
+  packageName: Desert Valley Materials
+  packageVersion: 1.0
+  assetPath: Assets/Desert Valley Materials/Materials/desDirtWall_light_mat.mat
+  uploadId: 244479
