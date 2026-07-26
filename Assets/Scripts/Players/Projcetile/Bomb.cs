@@ -10,6 +10,7 @@ public class Bomb : NetworkBehaviour
     [SerializeField] private ParticleSystem explosionPartical;
     [SerializeField] private Rigidbody rb;
     
+    [Networked] public PlayerRef Owner { get; private set; }
     public bool CanFly { get; set; }
     private Vector3 flyDirection;
 
@@ -17,6 +18,15 @@ public class Bomb : NetworkBehaviour
     {
         rb.useGravity = false;
         flyDirection = transform.forward;
+    }
+    
+    public void Initialize(PlayerRef owner)
+    {
+        if (!Object.HasStateAuthority)
+            return;
+
+        Owner = owner;
+        CanFly = true;
     }
 
     public override void FixedUpdateNetwork()
@@ -34,17 +44,15 @@ public class Bomb : NetworkBehaviour
         
         if (other.CompareTag("Player") && other.TryGetComponent(out PlayerHealth plHealth))
         {
-            PlayerHealth player = other.gameObject.GetComponent<PlayerHealth>();
-            if (HasStateAuthority)
-            {
-                if (!player.HasStateAuthority)
-                {
-                    plHealth.RPCTakeDamage(damage);
-                    PointsCountManager.Instance.RPC_AddPoint(Runner.LocalPlayer);
-                    BombDestruction(other.gameObject);
-                }
-            }
+            if (plHealth.Object.InputAuthority == Owner)
+                return;
+
+            plHealth.RPCTakeDamage(damage);
+            plHealth.RPCTakeDamage(damage);
+            PointsCountManager.Instance.RPC_AddPoint(Runner.LocalPlayer);
+            BombDestruction(other.gameObject);
         }
+        
         else if (other.CompareTag("Wall"))
         {
             if (HasStateAuthority)

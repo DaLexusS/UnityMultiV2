@@ -32,9 +32,14 @@ public class PlayerCombat : NetworkBehaviour
 
     public async void SpawnBomb()
     {
-        currentbomb = Runner.Spawn(bombPrefab, bombSpawnPoint.position,  transform.rotation);
+        if (!Object.HasStateAuthority) return;
+        
+        if (bombIsSpawned) return;
+        
         bombIsSpawned = true;
-        currentbomb.CanFly = true;
+        
+        currentbomb = Runner.Spawn(bombPrefab, bombSpawnPoint.position,  transform.rotation);
+        currentbomb.Initialize(Object.InputAuthority);
         
         await Awaitable.WaitForSecondsAsync(coolDown);
         
