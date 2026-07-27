@@ -87,14 +87,7 @@ public class PlayerSpawner : NetworkBehaviour
 
         RPC_RequestSpawn();
     }
-
-    /*
-     * Any client can send this RPC,
-     * but it executes only on State Authority.
-     *
-     * Because PlayerSpawner is a Master Client Object,
-     * State Authority is the Master Client.
-     */
+    
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RPC_RequestSpawn(
         RpcInfo info = default)
@@ -109,10 +102,7 @@ public class PlayerSpawner : NetworkBehaviour
 
             return;
         }
-
-        /*
-         * Prevent duplicate player spawning.
-         */
+        
         if (Runner.TryGetPlayerObject(
                 info.Source,
                 out _))
@@ -137,16 +127,9 @@ public class PlayerSpawner : NetworkBehaviour
 
             return;
         }
-
-        /*
-         * Only the master marks the position as occupied.
-         */
+        
         spawnPoints[spawnPointIndex].IsTaken = true;
-
-        /*
-         * Send the selected index only to
-         * the player who requested the spawn.
-         */
+        
         RPC_AssignSpawnPoint(
             info.Source,
             spawnPointIndex
@@ -190,10 +173,7 @@ public class PlayerSpawner : NetworkBehaviour
 
         return index;
     }
-
-    /*
-     * Target RPC executes only on targetPlayer's client.
-     */
+    
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_AssignSpawnPoint(
         [RpcTarget] PlayerRef targetPlayer,
@@ -246,39 +226,23 @@ public class PlayerSpawner : NetworkBehaviour
                 return;
             }
 
-            SpawnPoint selectedSpawnPoint =
-                spawnPoints[spawnPointIndex];
+            SpawnPoint selectedSpawnPoint = spawnPoints[spawnPointIndex];
 
-            NetworkObject playerObject =
+            NetworkObject playerObject = 
                 await Runner.SpawnAsync(
-                    playerPrefab,
+                    playerPrefab, 
                     selectedSpawnPoint.transform.position,
                     selectedSpawnPoint.transform.rotation,
                     Runner.LocalPlayer,
                     (spawnRunner, spawnedObject) =>
                     {
-                        PlayerSkinChanger skinChanger =
-                            spawnedObject.GetComponent<PlayerSkinChanger>();
+                        PlayerSkinChanger skinChanger = spawnedObject.GetComponent<PlayerSkinChanger>();
 
-                        if (skinChanger == null)
-                        {
-                            Debug.LogError(
-                                "PlayerSkinChanger was not found on the player prefab.",
-                                spawnedObject
-                            );
-
-                            return;
-                        }
-
-                        skinChanger.SetInitialSkin(
-                            confirmedSkinId
-                        );
+                       skinChanger.SetInitialSkin(confirmedSkinId);
                     }
                 );
 
-            /*
-             * Associate PlayerRef with its player object.
-             */
+           
             Runner.SetPlayerObject(
                 Runner.LocalPlayer,
                 playerObject

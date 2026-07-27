@@ -81,11 +81,7 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
 
             return;
         }
-
-        /*
-         * Clear stale selection data only for a genuinely new player.
-         * Updating the nickname must not reset Ready state.
-         */
+        
         if (isNewPlayer)
         {
             ReadyManager.Instance?
@@ -119,12 +115,8 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
             return;
         }
 
-        /*
-         * Release the player's locked skin before
-         * clearing their lobby slot.
-         */
-        ReadyManager.Instance?
-            .RemovePlayerState(player, playerSlot);
+       
+        ReadyManager.Instance?.RemovePlayerState(player, playerSlot);
 
         LobbyPlayers.Set(
             playerSlot,
@@ -138,13 +130,8 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
 
         RPC_LobbyPlayersChanged();
 
-        /*
-         * Example:
-         * Three players exist, two are ready and the unready
-         * player leaves. The remaining players are now all ready.
-         */
-        ReadyManager.Instance?
-            .EvaluateAllPlayersReady();
+        
+        ReadyManager.Instance?.EvaluateAllPlayersReady();
     }
 
     public void RefreshMasterClientState()
