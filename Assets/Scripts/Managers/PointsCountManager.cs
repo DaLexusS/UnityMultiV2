@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
@@ -36,6 +37,15 @@ public class PointsCountManager : NetworkBehaviour
     [Networked]
     private NetworkBool ResultsShown { get; set; }
 
+    [Networked]
+    private NetworkBool StartingBonusAwarded { get; set; }
+
+    [Networked]
+    private PlayerRef StartingBonusPlayer { get; set; }
+
+    [Networked]
+    private int StartingBonusAmount { get; set; }
+
     public override void Spawned()
     {
         Instance = this;
@@ -68,6 +78,42 @@ public class PointsCountManager : NetworkBehaviour
         alivePlayers.Add(player, true);
 
         AlivePlayersCount++;
+        TryAwardRandomStartingBonus();
+    }
+
+    private void TryAwardRandomStartingBonus()
+    {
+        if (!Object.HasStateAuthority ||
+            !Runner.IsSharedModeMasterClient ||
+            StartingBonusAwarded ||
+            TotalPlayers <= 0)
+        {
+            return;
+        }
+
+        List<PlayerRef> registeredPlayers = new();
+
+        foreach (var player in playerPoints)
+        {
+            registeredPlayers.Add(player.Key);
+        }
+
+        if (registeredPlayers.Count < TotalPlayers)
+            return;
+
+        StartingBonusPlayer =
+            registeredPlayers[
+                Random.Range(0, registeredPlayers.Count)
+            ];
+
+        StartingBonusAmount = Random.Range(1, 4);
+
+        StartingBonusAwarded = true;
+        AddPoints(StartingBonusPlayer, StartingBonusAmount);
+
+        Debug.Log(
+            $"Master randomly selected {StartingBonusPlayer} for +{StartingBonusAmount} starting bonus."
+        );
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
