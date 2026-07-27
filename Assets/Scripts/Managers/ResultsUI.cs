@@ -26,7 +26,9 @@ public class ResultsUI : MonoBehaviour
 
         foreach (var result in sortedResults)
         {
-            resultsText.text += $"{place}. {result.Key} has {result.Value} points\n";
+            string nickName = CharacterSelectionNetworkManager.Instance.GetPlayerNickname(result.Key);
+            
+            resultsText.text += $"{place}. {nickName} has {result.Value} points\n";
 
             place++;
         }

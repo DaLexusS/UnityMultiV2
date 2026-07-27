@@ -8,12 +8,7 @@ public class PointsCountManager : NetworkBehaviour
     public static PointsCountManager Instance { get; private set; }
 
     private const int MaxPlayers = 4;
-
-    /*
-     * 4 players: 3, 5, 8, 10
-     * 3 players:    5, 8, 10
-     * 2 players:       8, 10
-     */
+    
     private readonly int[] placementBonuses =
     {
         3,
@@ -122,10 +117,7 @@ public class PointsCountManager : NetworkBehaviour
         if (!playerPoints.ContainsKey(player))
             return;
 
-        playerPoints.Set(
-            player,
-            playerPoints[player] + 1
-        );
+        playerPoints.Set(player, playerPoints[player] + 5);
 
         Debug.Log(
             $"{player} received 1 point."
@@ -200,19 +192,14 @@ public class PointsCountManager : NetworkBehaviour
         ResultsShown = true;
 
         RPC_ShowResults();
-        CloseRoomAfterResults();
     }
 
-    private async void CloseRoomAfterResults()
+    public void CloseRoomAfterResults()
     {
-        if (!Object.HasStateAuthority ||
-            !Runner.IsSharedModeMasterClient)
+        if (!Object.HasStateAuthority || !Runner.IsSharedModeMasterClient)
         {
             return;
         }
-
-        await Awaitable.WaitForSecondsAsync(5f);
-
         NetworkManager.Instance?.CloseSessionForEveryone();
     }
 
