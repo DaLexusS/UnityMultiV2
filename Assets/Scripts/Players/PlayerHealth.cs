@@ -43,7 +43,7 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [Rpc]
-    public void RPCTakeDamage(int damage)
+    public void RPC_TakeDamage(int damage)
     {
         if (damage > 50)
             return;

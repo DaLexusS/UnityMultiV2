@@ -47,8 +47,7 @@ public class Bomb : NetworkBehaviour
             if (plHealth.Object.InputAuthority == Owner)
                 return;
 
-            plHealth.RPCTakeDamage(damage);
-            plHealth.RPCTakeDamage(damage);
+            plHealth.RPC_TakeDamage(damage);
             PointsCountManager.Instance.RPC_AddPoint(Runner.LocalPlayer);
             BombDestruction(other.gameObject);
         }

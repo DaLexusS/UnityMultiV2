@@ -72,7 +72,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bomb
   flySpeed: 10
-  damage: 50
+  damage: 25
   visual: {fileID: 4529523641812085076}
   explosionPartical: {fileID: 3195140550261521896}
   rb: {fileID: 8905018247377182175}
