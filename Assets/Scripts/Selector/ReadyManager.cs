@@ -39,7 +39,6 @@ public class ReadyManager : NetworkBehaviour
     {
         Instance = this;
         DontDestroyOnLoad(Instance);
-        // OnChangedRender is not called for initial values.
         OnReadyStateChanged?.Invoke();
     }
 
@@ -58,65 +57,39 @@ public class ReadyManager : NetworkBehaviour
         OnReadyStateChanged?.Invoke();
     }
 
-    // Called by the local player after clicking a skin button.
+   
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_SelectSkin(
-        int skinNumber,
-        RpcInfo info = default)
+    public void RPC_SelectSkin(int skinNumber, RpcInfo info = default)
     {
-        if (!IsValidSkin(skinNumber))
-        {
-            return;
-        }
+        if (!IsValidSkin(skinNumber)) return;
 
-        CharacterSelectionNetworkManager lobbyManager =
-            CharacterSelectionNetworkManager.Instance;
+        CharacterSelectionNetworkManager lobbyManager = CharacterSelectionNetworkManager.Instance;
 
-        if (lobbyManager == null)
-        {
-            return;
-        }
+        if (lobbyManager == null) return;
 
         int playerSlot = lobbyManager.GetPlayerSlot(info.Source);
 
-        if (!IsValidPlayerSlot(playerSlot))
-        {
-            return;
-        }
-
-        // Ready players cannot change their skin.
-        if (IsReadyAtSlot(playerSlot))
-        {
-            return;
-        }
-
-        /*
-         * A locked skin cannot even be provisionally selected.
-         * This also protects the system from direct RPC calls.
-         */
-        if (IsSkinLockedByAnotherPlayerInternal(
-                skinNumber,
-                info.Source))
+        if (!IsValidPlayerSlot(playerSlot)) return;
+        
+        if (IsReadyAtSlot(playerSlot)) return;
+       
+        
+        if (IsSkinLockedByAnotherPlayerInternal(skinNumber, info.Source))
         {
             RPC_SkinSelectionDenied(info.Source);
             return;
         }
 
-        if (SelectedSkins.Get(playerSlot) == skinNumber)
-        {
-            return;
-        }
+        if (SelectedSkins.Get(playerSlot) == skinNumber) return;
 
         SelectedSkins.Set(playerSlot, skinNumber);
         MarkStateChanged();
     }
-
-    // Called by the local player after clicking Ready.
+    
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_ReadyUp(RpcInfo info = default)
     {
-        CharacterSelectionNetworkManager lobbyManager =
-            CharacterSelectionNetworkManager.Instance;
+        CharacterSelectionNetworkManager lobbyManager = CharacterSelectionNetworkManager.Instance;
 
         if (lobbyManager == null)
         {
@@ -176,8 +149,7 @@ public class ReadyManager : NetworkBehaviour
 
     public int GetSelectedSkin(PlayerRef player)
     {
-        CharacterSelectionNetworkManager lobbyManager =
-            CharacterSelectionNetworkManager.Instance;
+        CharacterSelectionNetworkManager lobbyManager = CharacterSelectionNetworkManager.Instance;
 
         if (lobbyManager == null)
         {
@@ -196,8 +168,7 @@ public class ReadyManager : NetworkBehaviour
 
     public bool IsPlayerReady(PlayerRef player)
     {
-        CharacterSelectionNetworkManager lobbyManager =
-            CharacterSelectionNetworkManager.Instance;
+        CharacterSelectionNetworkManager lobbyManager = CharacterSelectionNetworkManager.Instance;
 
         if (lobbyManager == null)
         {
@@ -206,8 +177,7 @@ public class ReadyManager : NetworkBehaviour
 
         int playerSlot = lobbyManager.GetPlayerSlot(player);
 
-        return IsValidPlayerSlot(playerSlot) &&
-               IsReadyAtSlot(playerSlot);
+        return IsValidPlayerSlot(playerSlot) && IsReadyAtSlot(playerSlot);
     }
 
     public bool IsSkinLocked(int skinNumber)
@@ -220,9 +190,7 @@ public class ReadyManager : NetworkBehaviour
         return LockedSkinOwners.Get(skinNumber - 1) != 0;
     }
 
-    public bool IsSkinLockedByAnotherPlayer(
-        int skinNumber,
-        PlayerRef player)
+    public bool IsSkinLockedByAnotherPlayer(int skinNumber, PlayerRef player)
     {
         if (!IsValidSkin(skinNumber))
         {
@@ -261,18 +229,12 @@ public class ReadyManager : NetworkBehaviour
     }
 
    
-    public void RemovePlayerState(
-        PlayerRef player,
-        int playerSlot)
+    public void RemovePlayerState(PlayerRef player, int playerSlot)
     {
-        if (!Object.HasStateAuthority)
-        {
-            return;
-        }
-
+        if (!Object.HasStateAuthority) return;
+        
         int playerKey = player.RawEncoded;
-
-        // Release every skin belonging to this player.
+        
         for (int i = 0; i < LockedSkinOwners.Length; i++)
         {
             if (LockedSkinOwners.Get(i) == playerKey)
@@ -292,23 +254,15 @@ public class ReadyManager : NetworkBehaviour
     
     public void EvaluateAllPlayersReady()
     {
-        if (!Object.HasStateAuthority)
-        {
-            return;
-        }
-
+        if (!Object.HasStateAuthority) return;
         TryLoadGameplayScene();
     }
 
     private void TryLoadGameplayScene()
     {
-        if (SceneLoadStarted)
-        {
-            return;
-        }
-
-        CharacterSelectionNetworkManager lobbyManager =
-            CharacterSelectionNetworkManager.Instance;
+        if (SceneLoadStarted) return;
+        
+        CharacterSelectionNetworkManager lobbyManager = CharacterSelectionNetworkManager.Instance;
 
         if (lobbyManager == null)
         {
@@ -322,60 +276,34 @@ public class ReadyManager : NetworkBehaviour
             PlayerRef player =
                 lobbyManager.LobbyPlayers.Get(i);
 
-            if (player == PlayerRef.None)
-            {
-                continue;
-            }
-
+            if (player == PlayerRef.None) continue;
+            
             registeredPlayersCount++;
 
-            if (!IsReadyAtSlot(i))
-            {
-                return;
-            }
+            if (!IsReadyAtSlot(i)) return;
 
             int selectedSkin = SelectedSkins.Get(i);
 
-            if (!IsValidSkin(selectedSkin))
-            {
-                return;
-            }
+            if (!IsValidSkin(selectedSkin)) return;
             
-            int skinOwner =
-                LockedSkinOwners.Get(selectedSkin - 1);
+            
+            int skinOwner = LockedSkinOwners.Get(selectedSkin - 1);
 
-            if (skinOwner != player.RawEncoded)
-            {
-                return;
-            }
+            if (skinOwner != player.RawEncoded) return;
+            
         }
 
-        if (registeredPlayersCount == 0)
-        {
-            return;
-        }
+        if (registeredPlayersCount == 0) return;
         
-        int activePlayersCount =
-            Runner.ActivePlayers.Count();
+        
+        int activePlayersCount = Runner.ActivePlayers.Count();
 
-        if (registeredPlayersCount != activePlayersCount)
-        {
-            return;
-        }
+        if (registeredPlayersCount != activePlayersCount) return;
+        
+        if (!Runner.IsSharedModeMasterClient) return;
+        
 
-        if (!Runner.IsSharedModeMasterClient)
-        {
-            Debug.LogError(
-                "Only the Shared Mode Master Client can load the gameplay scene.",
-                this
-            );
-
-            return;
-        }
-
-        if (gameplaySceneBuildIndex < 0 ||
-            gameplaySceneBuildIndex >=
-            SceneManager.sceneCountInBuildSettings)
+        if (gameplaySceneBuildIndex < 0 || gameplaySceneBuildIndex >= SceneManager.sceneCountInBuildSettings)
         {
             Debug.LogError(
                 $"Invalid gameplay scene build index: {gameplaySceneBuildIndex}",
@@ -397,15 +325,11 @@ public class ReadyManager : NetworkBehaviour
         return ReadyStates.Get(playerSlot) == 1;
     }
 
-    private bool IsSkinLockedByAnotherPlayerInternal(
-        int skinNumber,
-        PlayerRef player)
+    private bool IsSkinLockedByAnotherPlayerInternal(int skinNumber, PlayerRef player)
     {
-        int skinOwner =
-            LockedSkinOwners.Get(skinNumber - 1);
+        int skinOwner = LockedSkinOwners.Get(skinNumber - 1);
 
-        return skinOwner != 0 &&
-               skinOwner != player.RawEncoded;
+        return skinOwner != 0 && skinOwner != player.RawEncoded;
     }
 
     private void MarkStateChanged()
@@ -415,24 +339,19 @@ public class ReadyManager : NetworkBehaviour
 
     private static bool IsValidSkin(int skinNumber)
     {
-        return skinNumber >= 1 &&
-               skinNumber <= SkinCount;
+        return skinNumber >= 1 && skinNumber <= SkinCount;
     }
     
     public int GetConfirmedSkin(PlayerRef player)
     {
-        if (player == PlayerRef.None)
-            return 0;
+        if (player == PlayerRef.None) return 0;
 
         int playerKey = player.RawEncoded;
 
         for (int i = 0; i < LockedSkinOwners.Length; i++)
         {
             if (LockedSkinOwners.Get(i) == playerKey)
-            {
-                // Array index 0 represents Skin 1.
                 return i + 1;
-            }
         }
 
         return 0;
@@ -440,36 +359,26 @@ public class ReadyManager : NetworkBehaviour
 
     private static bool IsValidPlayerSlot(int playerSlot)
     {
-        return playerSlot >= 0 &&
-               playerSlot < MaxPlayers;
+        return playerSlot >= 0 && playerSlot < MaxPlayers;
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_SkinSelectionDenied(
-        [RpcTarget] PlayerRef targetPlayer)
+    private void RPC_SkinSelectionDenied([RpcTarget] PlayerRef targetPlayer)
     {
-        ErrorHandlerUi.ReportError(
-            "This skin is already locked by another player."
-        );
+        ErrorHandlerUi.ReportError("This skin is already locked by another player.");
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_ReadyDenied(
-        [RpcTarget] PlayerRef targetPlayer,
-        ReadyDeniedReason reason)
+    private void RPC_ReadyDenied([RpcTarget] PlayerRef targetPlayer, ReadyDeniedReason reason)
     {
         switch (reason)
         {
             case ReadyDeniedReason.NoSkinSelected:
-                ErrorHandlerUi.ReportError(
-                    "Select a skin before pressing Ready."
-                );
+                ErrorHandlerUi.ReportError("Select a skin before pressing Ready.");
                 break;
 
             case ReadyDeniedReason.SkinAlreadyTaken:
-                ErrorHandlerUi.ReportError(
-                    "This skin was locked by another player. Select another skin."
-                );
+                ErrorHandlerUi.ReportError("This skin was locked by another player. Select another skin.");
                 break;
         }
 

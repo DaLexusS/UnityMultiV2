@@ -13,8 +13,7 @@ public class PlayerItem : MonoBehaviour
     [SerializeField] private Button readyButton;
 
     
-    [SerializeField] private Button[] skinButtons =
-        new Button[ReadyManager.SkinCount];
+    [SerializeField] private Button[] skinButtons = new Button[ReadyManager.SkinCount];
     
 
     public PlayerRef Player { get; private set; }
@@ -25,20 +24,9 @@ public class PlayerItem : MonoBehaviour
     {
         if (readyButton != null)
         {
-            readyButton.onClick.AddListener(
-                HandleReadyClicked
-            );
+            readyButton.onClick.AddListener(HandleReadyClicked);
         }
-
-        if (skinButtons.Length != ReadyManager.SkinCount)
-        {
-            Debug.LogError(
-                $"{nameof(PlayerItem)} must contain exactly " +
-                $"{ReadyManager.SkinCount} skin buttons.",
-                this
-            );
-        }
-
+        
         for (int i = 0; i < skinButtons.Length; i++)
         {
             if (skinButtons[i] == null)
@@ -48,9 +36,7 @@ public class PlayerItem : MonoBehaviour
 
             int skinNumber = i + 1;
 
-            skinButtons[i].onClick.AddListener(
-                () => HandleSkinClicked(skinNumber)
-            ); 
+            skinButtons[i].onClick.AddListener(() => HandleSkinClicked(skinNumber)); 
         }
     }
 
@@ -58,18 +44,7 @@ public class PlayerItem : MonoBehaviour
     {
         Player = playerInfo.Player;
         initialized = true;
-
-        if (nicknameText == null)
-        {
-            Debug.LogError(
-                $"{nameof(PlayerItem)} has no nickname text assigned.",
-                this
-            );
-        }
-        else
-        {
-            nicknameText.text = playerInfo.Nickname;
-        }
+        nicknameText.text = playerInfo.Nickname;
 
         RefreshState();
     }
@@ -81,72 +56,44 @@ public class PlayerItem : MonoBehaviour
             return;
         }
 
-        CharacterSelectionNetworkManager lobbyManager =
-            CharacterSelectionNetworkManager.Instance;
+        CharacterSelectionNetworkManager lobbyManager = CharacterSelectionNetworkManager.Instance;
 
-        ReadyManager readyManager =
-            ReadyManager.Instance;
+        ReadyManager readyManager = ReadyManager.Instance;
 
-        if (lobbyManager == null ||
-            readyManager == null)
+        if (lobbyManager == null || readyManager == null)
         {
             SetButtonsInteractable(false);
             return;
         }
 
-        bool isLocalOwner =
-            lobbyManager.Runner.LocalPlayer == Player;
+        bool isLocalOwner = lobbyManager.Runner.LocalPlayer == Player;
 
-        int selectedSkin =
-            readyManager.GetSelectedSkin(Player);
+        int selectedSkin = readyManager.GetSelectedSkin(Player);
 
-        bool isReady =
-            readyManager.IsPlayerReady(Player);
+        bool isReady = readyManager.IsPlayerReady(Player);
 
-        for (int i = 0; i < skinButtons.Length; i++)
+        for (int i = 0; i < skinButtons.Length; i++) 
         {
             int skinNumber = i + 1;
 
-            bool lockedByAnotherPlayer =
-                readyManager.IsSkinLockedByAnotherPlayer(
-                    skinNumber,
-                    Player
-                );
+            bool lockedByAnotherPlayer = readyManager.IsSkinLockedByAnotherPlayer(skinNumber, Player);
 
             if (skinButtons[i] != null)
             {
-               skinButtons[i].interactable =
-                    isLocalOwner &&
-                    !isReady &&
-                    !lockedByAnotherPlayer;
+               skinButtons[i].interactable = isLocalOwner && !isReady && !lockedByAnotherPlayer;
             }
         }
 
-        bool hasSelectedSkin =
-            selectedSkin >= 1 &&
-            selectedSkin <= ReadyManager.SkinCount;
+        bool hasSelectedSkin = selectedSkin >= 1 && selectedSkin <= ReadyManager.SkinCount;
 
-        bool selectedSkinTakenByAnother =
-            hasSelectedSkin &&
-            readyManager.IsSkinLockedByAnotherPlayer(
-                selectedSkin,
-                Player
-            );
+        bool selectedSkinTakenByAnother = hasSelectedSkin && readyManager.IsSkinLockedByAnotherPlayer(selectedSkin, Player);
 
         if (readyButton != null)
         {
-            readyButton.interactable =
-                isLocalOwner &&
-                !isReady &&
-                hasSelectedSkin &&
-                !selectedSkinTakenByAnother;
+            readyButton.interactable = isLocalOwner && !isReady && hasSelectedSkin && !selectedSkinTakenByAnother;
         }
 
-        UpdateReadyStatus(
-            isReady,
-            hasSelectedSkin,
-            selectedSkinTakenByAnother
-        );
+        UpdateReadyStatus(isReady, hasSelectedSkin, selectedSkinTakenByAnother);
     }
 
     private void HandleSkinClicked(int skinNumber)
@@ -156,8 +103,7 @@ public class PlayerItem : MonoBehaviour
             return;
         }
 
-        ReadyManager.Instance?
-            .RPC_SelectSkin(skinNumber);
+        ReadyManager.Instance?.RPC_SelectSkin(skinNumber);
     }
 
     private void HandleReadyClicked()
@@ -172,17 +118,12 @@ public class PlayerItem : MonoBehaviour
 
     private bool IsLocalPanelOwner()
     {
-        CharacterSelectionNetworkManager manager =
-            CharacterSelectionNetworkManager.Instance;
+        CharacterSelectionNetworkManager manager = CharacterSelectionNetworkManager.Instance;
 
-        return manager != null &&
-               manager.Runner.LocalPlayer == Player;
+        return manager != null && manager.Runner.LocalPlayer == Player;
     }
 
-    private void UpdateReadyStatus(
-        bool isReady,
-        bool hasSelectedSkin,
-        bool selectedSkinTakenByAnother)
+    private void UpdateReadyStatus(bool isReady, bool hasSelectedSkin, bool selectedSkinTakenByAnother)
     {
         if (readyStatusText == null)
         {
