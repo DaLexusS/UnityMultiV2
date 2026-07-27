@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #171717;
+      font-family: Arial, "Noto Sans Hebrew", sans-serif;
+      font-size: 12.5px;
+      line-height: 1.45;
+      direction: rtl;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    h2 {
+      margin: 18px 0 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #999;
+      font-size: 17px;
+      break-after: avoid;
+    }
+
+    h3 {
+      margin: 10px 0 3px;
+      font-size: 13.5px;
+      font-weight: 700;
+      break-after: avoid;
+    }
+
+    p {
+      margin: 0 0 5px;
+    }
+
+    .scripts {
+      direction: ltr;
+      text-align: left;
+      color: #333;
+      background: #f3f3f3;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 3px 5px;
+      font-size: 11.5px;
+      break-inside: avoid;
+    }
+
+    code {
+      direction: ltr;
+      unicode-bidi: embed;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.92em;
+      background: #eee;
+      padding: 1px 3px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+<p>﻿## פיצ'רים כלליים</p>
+
+<h3>סצינת פתיחה / אובייקטים עקביים</h3>
+<p>בוצע. יש אובייקטים שממשיכים בין סצינות בעזרת <code>DontDestroyOnLoad</code>.</p>
+<p class="scripts">Scripts: <code>NetworkManager</code>, <code>CharacterSelectionNetworkManager</code>, <code>ReadyManager</code>.</p>
+
+<h3>סצינת תפריט ראשי + מציאת חדרים</h3>
+<p>בוצע. יש <code>LobbyScene</code> עם יצירת חדר, רשימת חדרים, סינון חדרים והצטרפות.</p>
+<p class="scripts">Scripts: <code>SessionListUiHandler</code>, <code>SessionInfoListUiItem</code>, <code>NetworkManager</code>, <code>SessionMetadata</code>.</p>
+
+<h3>סצינת משחק מולטיפלייר</h3>
+<p>בוצע. יש <code>GameScene</code> עם שחקנים, תנועה, פצצות, חיים, ניקוד ותוצאות.</p>
+<p class="scripts">Scripts: <code>PlayerSpawner</code>, <code>PlayerMovement</code>, <code>PlayerCombat</code>, <code>PlayerHealth</code>, <code>Bomb</code>, <code>PointsCountManager</code>, <code>ResultsUI</code>.</p>
+
+<h2>חובה - 40 נקודות</h2>
+
+<h3>אפשרות לפתוח או להצטרף לחדר, מינימום 3 שחקנים</h3>
+<p>בוצע. השחקן יכול לפתוח חדר או להצטרף לחדר קיים. מספר השחקנים מוגבל ל-3 עד 4.</p>
+<p class="scripts">Scripts: <code>SessionListUiHandler</code>, <code>NetworkManager</code>, <code>SessionCreateRequest</code>.</p>
+
+<h3>שימוש ב-3 RPC שונים, ובכל אחד משתנה מסוג אחר</h3>
+<p>בוצע. יש RPC עם <code>string</code>, RPC עם <code>int</code>, ו-RPC עם <code>PlayerRef</code>.</p>
+<p class="scripts">Scripts: <code>CharacterSelectionNetworkManager</code>, <code>ReadyManager</code>, <code>PlayerHealth</code>, <code>PointsCountManager</code>.</p>
+
+<h3>Serialize + Deserialize של Json עם לפחות 3 משתנים והעברתו ב-RPC</h3>
+<p>בוצע. נשלח JSON של הגדרות המשחק דרך RPC.</p>
+<p class="scripts">Scripts: <code>MatchSettingsJson</code>, <code>MatchSettingsSync</code>, <code>NetworkManager</code>.</p>
+
+<h3>שימוש ב-NetworkTransform</h3>
+<p>בוצע. יש <code>NetworkTransform</code> על השחקן ועל אובייקטים רשתיים.</p>
+<p class="scripts">Prefabs: <code>Player</code>, <code>Bomb</code>, <code>OldModel</code> characters.</p>
+
+<h3>שליטה בדמות בעזרת New Input System</h3>
+<p>בוצע. התנועה והירייה משתמשים ב-New Input System.</p>
+<p class="scripts">Scripts: <code>PlayerMovement</code>, <code>PlayerCombat</code>.</p>
+
+<h3>הכנת הקליינט להפוך למאסטר בכל רגע</h3>
+<p>בוצע. מידע חשוב נשמר ב-<code>[Networked]</code>, והמאסטר החדש מרענן את מצב הלובי וה-UI.</p>
+<p class="scripts">Scripts: <code>NetworkManager</code>, <code>CharacterSelectionNetworkManager</code>, <code>ReadyManager</code>, <code>PointsCountManager</code>.</p>
+
+<h3>מעבר סצינות דרך המאסטר ודרך Photon</h3>
+<p>בוצע. רק המאסטר טוען סצינות בעזרת <code>Runner.LoadScene</code>.</p>
+<p class="scripts">Scripts: <code>NetworkManager</code>, <code>ReadyManager</code>.</p>
+
+<h3>הפרדה בין מאסטר קליינט לקליינט ב-UI</h3>
+<p>בוצע. רק המאסטר רואה Start, Close ו-Kick. שחקן רגיל רואה Leave.</p>
+<p class="scripts">Scripts: <code>SessionListUiHandler</code>, <code>PlayerDataUi</code>, <code>NetworkManager</code>, <code>CharacterSelectionNetworkManager</code>.</p>
+
+<h3>בחירת דמות / סקין בלי כפילות</h3>
+<p>בוצע. המאסטר נועל סקינים ומונע כפילות.</p>
+<p class="scripts">Scripts: <code>ReadyManager</code>, <code>PlayerItem</code>, <code>SelectorUI</code>, <code>PlayerSkinChanger</code>, <code>CharacterSelectionNetworkManager</code>.</p>
+
+<h3>רק המאסטר מחליט מספרים רנדומליים והחלטות משחק</h3>
+<p>בוצע. המאסטר בוחר נקודת Spawn רנדומלית, בוחר שחקן רנדומלי לקבל בונוס פתיחה, ובוחר סכום בונוס רנדומלי.</p>
+<p class="scripts">Scripts: <code>PlayerSpawner</code>, <code>PointsCountManager</code>.</p>
+
+<h3>תנאי סיום משחק ותפריט תוצאות</h3>
+<p>בוצע. כאשר נשאר שחקן אחרון, מוצג מסך תוצאות.</p>
+<p class="scripts">Scripts: <code>PointsCountManager</code>, <code>ResultsUI</code>, <code>PlayerHealth</code>.</p>
+
+<h3>מערכת ניקוד שמסתנכרנת בין השחקנים</h3>
+<p>בוצע. הניקוד נשמר ב-<code>NetworkDictionary</code>.</p>
+<p class="scripts">Scripts: <code>PointsCountManager</code>, <code>ResultsUI</code>, <code>Bomb</code>, <code>PlayerHealth</code>.</p>
+
+<h3>בסיום המשחק לסגור את החדר ולהחזיר לתפריט</h3>
+<p>בוצע. אחרי תוצאות המשחק המאסטר סוגר את החדר ומחזיר את כולם לתפריט.</p>
+<p class="scripts">Scripts: <code>PointsCountManager</code>, <code>NetworkManager</code>, <code>CharacterSelectionNetworkManager</code>, <code>PlayerSpawner</code>.</p>
+
+<h3>שימוש ב-NetworkRunner.Spawn</h3>
+<p>בוצע. משתמשים ב-<code>Runner.Spawn</code> ו-<code>SpawnAsync</code>.</p>
+<p class="scripts">Scripts: <code>NetworkManager</code>, <code>PlayerSpawner</code>, <code>PlayerCombat</code>, <code>StartMultiGameForTest</code>.</p>
+
+<h3>שימוש ב-NetworkRunner.DeSpawn</h3>
+<p>בוצע. משתמשים ב-<code>Runner.Despawn</code> למחיקת שחקן שמת ופצצות.</p>
+<p class="scripts">Scripts: <code>PlayerHealth</code>, <code>Bomb</code>, <code>CharacterObjectSpawner</code> אם קיים בפרויקט.</p>
+
+<h2>בחירה</h2>
+
+<h3>הגדרות חדר בפתיחת חדר רק למאסטר</h3>
+<p>בוצע. המאסטר יכול לבחור שם חדר, מצב משחק, מפה, אזור, סיסמה ומספר שחקנים.</p>
+<p class="scripts">Scripts: <code>SessionListUiHandler</code>, <code>NetworkManager</code>, <code>SessionMetadata</code>, <code>SessionCreateRequest</code>.</p>
+
+<h3>NetworkMecanimAnimator</h3>
+<p>לא בוצע.</p>
+<p class="scripts">Scripts: אין.</p>
+
+<h3>NetworkRigidbody 3D</h3>
+<p>בוצע. הפצצה משתמשת ב-<code>NetworkRigidbody3D</code>.</p>
+<p class="scripts">Scripts: <code>Bomb</code>.</p>
+<p class="scripts">Prefab: <code>Bomb</code>.</p>
+
+<h3>שימוש ב-5 משתנים <code>[Networked]</code> לפחות</h3>
+<p>בוצע. יש הרבה משתנים <code>[Networked]</code> בניהול סקינים, ניקוד, חיים ותוצאות.</p>
+<p class="scripts">Scripts: <code>ReadyManager</code>, <code>CharacterSelectionNetworkManager</code>, <code>PlayerHealth</code>, <code>PointsCountManager</code>, <code>PlayerSkinChanger</code>.</p>
+
+<h3>הצגת רשימת חדרים פתוחים וכמה שחקנים יש</h3>
+<p>בוצע. רשימת החדרים מציגה שם חדר וכמות שחקנים.</p>
+<p class="scripts">Scripts: <code>SessionListUiHandler</code>, <code>SessionInfoListUiItem</code>, <code>NetworkManager</code>.</p>
+
+<h3>טיפול בשגיאות בהצטרפות לחדר</h3>
+<p>בוצע. שגיאות מוצגות דרך מערכת הודעות שגיאה.</p>
+<p class="scripts">Scripts: <code>ErrorHandlerUi</code>, <code>ErrorMessageUi</code>, <code>NetworkManager</code>, <code>SessionListUiHandler</code>.</p>
+
+<h3>טיפול בניתוק שחקן מקומי ומרוחק</h3>
+<p>בוצע חלקית. שחקן מרוחק נמחק מהרשימות. שחקן מקומי מקבל הודעת שגיאה.</p>
+<p class="scripts">Scripts: <code>NetworkManager</code>, <code>CharacterSelectionNetworkManager</code>, <code>ReadyManager</code>, <code>ErrorHandlerUi</code>.</p>
+
+<h3>התחברות מחדש אחרי קריסה</h3>
+<p>לא בוצע.</p>
+<p class="scripts">Scripts: אין.</p>
+
+<h3>המאסטר מכריז מתי אפשר להתחיל</h3>
+<p>בוצע. המשחק מתחיל רק אחרי שכל השחקנים מוכנים ובחרו סקין.</p>
+<p class="scripts">Scripts: <code>ReadyManager</code>, <code>PlayerItem</code>, <code>SelectorUI</code>.</p>
+
+<h3>ולידציה ואתחול מול המאסטר כששחקן מצטרף</h3>
+<p>בוצע. שחקן שולח ניקניים למאסטר, והמאסטר מוסיף אותו לרשימת השחקנים.</p>
+<p class="scripts">Scripts: <code>NetworkManager</code>, <code>CharacterSelectionNetworkManager</code>, <code>ReadyManager</code>.</p>
+
+<h3>שחקן מחשב מחליף שחקן שהתנתק</h3>
+<p>לא בוצע.</p>
+<p class="scripts">Scripts: אין.</p>
+
+<h3>הצטרפות לחדר רנדומלי לפי 3 הגדרות</h3>
+<p>בוצע. הצטרפות רנדומלית משתמשת ב-3 הגדרות: מצב משחק, מפה ואזור.</p>
+<p class="scripts">Scripts: <code>SessionListUiHandler</code>, <code>SessionMetadata</code>, <code>NetworkManager</code>.</p>
+
+<h3>MatchMaking מתמשך ודינמי</h3>
+<p>לא בוצע.</p>
+<p class="scripts">Scripts: אין.</p>
+
+<h3>MasterClientObject</h3>
+<p>בוצע חלקית. <code>PlayerSpawner</code> מתנהג כאובייקט של המאסטר ומבצע החלטות מאסטר.</p>
+<p class="scripts">Scripts: <code>PlayerSpawner</code>, <code>NetworkManager</code>.</p>
+
+<h3>תפתיעו אותי</h3>
+<p>Ok will try.</p>
+
+<h3>Host Mode</h3>
+<p>לא בוצע. הפרויקט בנוי ב-Shared Mode.</p>
+<p class="scripts">Scripts: אין.</p>
+
+<h3>Host migration ב-Host Mode</h3>
+<p>לא רלוונטי כי הפרויקט לא Host Mode.</p>
+<p class="scripts">Scripts: אין.</p>
+
+<h3>Dedicated Server</h3>
+<p>לא בוצע.</p>
+<p class="scripts">Scripts: אין.</p>
+
+<h3>Database</h3>
+<p>לא בוצע.</p>
+<p class="scripts">Scripts: אין.</p>
+
+
+
+
+</body>
+</html>
