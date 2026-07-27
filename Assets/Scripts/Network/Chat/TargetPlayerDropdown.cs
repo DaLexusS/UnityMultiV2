@@ -42,6 +42,9 @@ public class TargetPlayerDropdown : MonoBehaviour
 
         foreach (PlayerRef player in netRunner.ActivePlayers.OrderBy(p => p.PlayerId))
         {
+            if (player == netRunner.LocalPlayer)
+                continue;
+            
             targets.Add(player);
 
             string nickname = CharacterSelectionNetworkManager.Instance.GetPlayerNickname(player);

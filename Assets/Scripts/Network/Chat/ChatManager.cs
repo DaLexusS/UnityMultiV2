@@ -14,9 +14,7 @@ public class ChatManager : NetworkBehaviour
     public void RPC_SendMessageToServer(PlayerRef sender, PlayerRef targetPlayer, string message)
     {
         
-        string nickname =
-            CharacterSelectionNetworkManager.Instance
-                .GetPlayerNickname(sender);
+        string nickname = CharacterSelectionNetworkManager.Instance.GetPlayerNickname(sender);
         
         if (targetPlayer == PlayerRef.None)
         {
@@ -25,6 +23,7 @@ public class ChatManager : NetworkBehaviour
         else
         {
             RPC_ReceiveMessagePersonal(targetPlayer, nickname, message);
+            RPC_ReceiveMessagePersonal(sender, nickname, message);
         }
     }
 

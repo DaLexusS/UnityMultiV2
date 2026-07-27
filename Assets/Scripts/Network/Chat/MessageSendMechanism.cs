@@ -22,5 +22,7 @@ public class MessageSendMechanism : MonoBehaviour
         PlayerRef sender = networkRunner.LocalPlayer;
         
         ChatManager.Instance.RPC_SendMessageToServer(sender, target , field.text);
+        field.text = "";
+        
     }
 }

@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 484414952168647948}
-  - component: {fileID: 4935977747369322603}
   - component: {fileID: 4229299578514962904}
   m_Layer: 0
   m_Name: GameManager
@@ -33,22 +32,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4935977747369322603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4407971395476196364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab3e61d3d3b0ad840b5b10cdd92a2ede, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FusionSpawnManager
-  spawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  playerPrefab: {fileID: 0}
 --- !u!114 &4229299578514962904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,6 +48,5 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 131073
   NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 4935977747369322603}
+  NetworkedBehaviours: []
   ForceRemoteRenderTimeframe: 0
