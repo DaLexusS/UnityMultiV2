@@ -21,6 +21,7 @@ public class PlayerMovement : NetworkBehaviour
         base.FixedUpdateNetwork();
         if (!Object.HasStateAuthority) return;
         if (!CanMove) return;
+        if (Keyboard.current == null) return;
         
         
         Vector3 rotationVector = Vector3.zero;

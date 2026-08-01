@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class ErrorHandlerUi : MonoBehaviour
+public class ErrorMessagePresenter : MonoBehaviour
 {
     public static event Action<string> ErrorRequested;
 
-    [SerializeField] private ErrorMessageUi errorMessagePrefab;
+    [SerializeField] private ErrorMessageView errorMessagePrefab;
     [SerializeField] private Transform messageParent;
     [SerializeField] private float visibleSeconds = 3f;
     [SerializeField] private string debugMessage = "Debug error test";
@@ -33,7 +33,7 @@ public class ErrorHandlerUi : MonoBehaviour
         ShowError(shownMessage);
     }
 
-    public void Debug1()
+    public void ShowDebugMessage()
     {
         ReportError(debugMessage);
     }
@@ -44,7 +44,7 @@ public class ErrorHandlerUi : MonoBehaviour
             return;
 
         Transform parent = messageParent != null ? messageParent : transform;
-        ErrorMessageUi errorMessage = Instantiate(errorMessagePrefab, parent);
+        ErrorMessageView errorMessage = Instantiate(errorMessagePrefab, parent);
         errorMessage.SetMessage(string.IsNullOrWhiteSpace(message) ? "Something went wrong." : message);
 
         StartCoroutine(HideAfterDelay(errorMessage.gameObject));

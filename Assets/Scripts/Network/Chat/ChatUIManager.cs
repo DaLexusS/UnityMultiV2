@@ -19,6 +19,12 @@ public class ChatUIManager : MonoBehaviour
       Instance = this;
    }
 
+   private void OnDestroy()
+   {
+      if (Instance == this)
+         Instance = null;
+   }
+
    public void AddMessage(string sender, string message)
    {
       TextMeshProUGUI newTextMessage = Instantiate(textMessagePrefab, content);

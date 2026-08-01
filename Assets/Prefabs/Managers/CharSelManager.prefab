@@ -45,7 +45,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7f2cc32ecf176e43b4b48f6ff47c278, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterSelectionNetworkManager
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::CharacterSelectionNetworkManager
   _TakenCharacters: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!114 &1243829924651938442
 MonoBehaviour:
@@ -58,7 +58,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a2b4a3e7bb942c488f5c11a302c2d3c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MatchSettingsSync
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::MatchSettingsSync
 --- !u!114 &6265060524603562993
 MonoBehaviour:
   m_ObjectHideFlags: 0

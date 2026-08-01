@@ -364,7 +364,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 7867684027665706440}
   scaleTarget: {fileID: 7895807011382927057}
   hoverTextColor: {r: 0, g: 0, b: 0, a: 1}

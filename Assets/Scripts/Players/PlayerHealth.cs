@@ -6,7 +6,7 @@ public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] private PlayerMovement _playerMovement;
     [SerializeField] private PlayerAnimatorController _playerAnimator;
-    private int MaxHp = 100;
+    private const int MaxHealth = 100;
 
     [Networked, OnChangedRender(nameof(UpdateHealthUI))] [field: SerializeField]
     public int CurrentHp
@@ -19,7 +19,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (Object.HasStateAuthority)
         {
-            CurrentHp = MaxHp;
+            CurrentHp = MaxHealth;
         }
 
         string nickname =
@@ -30,7 +30,7 @@ public class PlayerHealth : NetworkBehaviour
 
         PlayerUI.Instance?.RegisterPlayer(
             Object.InputAuthority,
-            MaxHp,
+            MaxHealth,
             CurrentHp,
             nickname
         );
@@ -45,7 +45,7 @@ public class PlayerHealth : NetworkBehaviour
     [Rpc]
     public void RPCTakeDamage(int damage)
     {
-        if (damage > 50)
+        if (!NetworkInputValidation.IsValidDamage(damage))
             return;
         
         TakeDamage(damage);
@@ -64,8 +64,8 @@ public class PlayerHealth : NetworkBehaviour
 
     private void UpdateHealthUI()
     {
-        CurrentHp = Mathf.Clamp(CurrentHp, 0, MaxHp);
-        PlayerUI.Instance.UpdateHealth(Object.InputAuthority, CurrentHp);
+        CurrentHp = Mathf.Clamp(CurrentHp, 0, MaxHealth);
+        PlayerUI.Instance?.UpdateHealth(Object.InputAuthority, CurrentHp);
     }
 
 
@@ -84,7 +84,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (!Object.HasStateAuthority) return;
         
-        PointsCountManager.Instance?.RPC_PlayerDied(Object.InputAuthority);
+        PointsCountManager.Instance?.RPC_PlayerDied();
         
         _playerAnimator.ActivateDeathAnimation();
     }

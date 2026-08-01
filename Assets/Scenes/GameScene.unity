@@ -460,7 +460,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4d9428e8845f6f46940836566a762e3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::SpawnPoint
   cameraPoint: {fileID: 687855056}
 --- !u!1001 &414200784
 PrefabInstance:
@@ -1214,7 +1214,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6db5a05221872f6439349f1377e18558, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::PlayerUI
   hpBars:
   - {fileID: 2040804431}
   - {fileID: 730474863}
@@ -1236,7 +1236,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78f9211ef1ede624ea5174e90692129e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ResultsUI
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ResultsUI
   resultsPanel: {fileID: 1200280842}
   resultsText: {fileID: 1775416203}
 --- !u!1001 &893709545
@@ -1827,8 +1827,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1513966677}
-        m_TargetAssemblyTypeName: PlayerSpawner, Assembly-CSharp
-        m_MethodName: ExitTheGAmeToMenu
+        m_TargetAssemblyTypeName: PlayerSpawner, UnityMultiV2.Runtime
+        m_MethodName: ExitTheGameToMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1966,7 +1966,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4d9428e8845f6f46940836566a762e3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::SpawnPoint
   cameraPoint: {fileID: 1367508147}
 --- !u!4 &1171143178
 Transform:
@@ -2088,7 +2088,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4d9428e8845f6f46940836566a762e3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::SpawnPoint
   cameraPoint: {fileID: 817816787}
 --- !u!4 &1212578766
 Transform:
@@ -2653,7 +2653,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fbf4245a498db114484c8980d9df8f0c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StartMultiGameForTest
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::MultiplayerTestBootstrap
   playerPrefab:
     RawGuidValue: bccdd6daf765e9f4a8f394ddfa96f37e
   spawnPoints:
@@ -2850,7 +2850,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4d9428e8845f6f46940836566a762e3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::SpawnPoint
   cameraPoint: {fileID: 91639321}
 --- !u!1001 &1708546384
 PrefabInstance:

@@ -44,7 +44,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 161c86417bef277448a11085f4effdd7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PointsCountManager
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::PointsCountManager
 --- !u!114 &5620353618453702594
 MonoBehaviour:
   m_ObjectHideFlags: 0

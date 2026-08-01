@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Fusion;
 using UnityEngine;
 
@@ -67,10 +68,13 @@ public class PointsCountManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_RegisterPlayer(
-        PlayerRef player,
-        RpcInfo info = default)
+    public void RPC_RegisterPlayer(RpcInfo info = default)
     {
+        PlayerRef player = info.Source;
+
+        if (player == PlayerRef.None || !Runner.ActivePlayers.Contains(player))
+            return;
+
         if (playerPoints.ContainsKey(player))
             return;
 
@@ -117,8 +121,10 @@ public class PointsCountManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_AddPoint(PlayerRef player)
+    public void RPC_AddPoint(RpcInfo info = default)
     {
+        PlayerRef player = info.Source;
+
         if (!playerPoints.ContainsKey(player))
             return;
 
@@ -133,8 +139,10 @@ public class PointsCountManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_PlayerDied(PlayerRef deadPlayer)
+    public void RPC_PlayerDied(RpcInfo info = default)
     {
+        PlayerRef deadPlayer = info.Source;
+
         if (ResultsShown)
             return;
 
@@ -200,10 +208,14 @@ public class PointsCountManager : NetworkBehaviour
         ResultsShown = true;
 
         RPC_ShowResults();
-        CloseRoomAfterResults();
+        AsyncTaskRunner.Run(
+            CloseRoomAfterResultsAsync(),
+            this,
+            "Could not close the room after the match."
+        );
     }
 
-    private async void CloseRoomAfterResults()
+    private async Task CloseRoomAfterResultsAsync()
     {
         if (!Object.HasStateAuthority ||
             !Runner.IsSharedModeMasterClient)
@@ -211,7 +223,7 @@ public class PointsCountManager : NetworkBehaviour
             return;
         }
 
-        await Awaitable.WaitForSecondsAsync(5f);
+        await Awaitable.WaitForSecondsAsync(5f, destroyCancellationToken);
 
         NetworkManager.Instance?.CloseSessionForEveryone();
     }
@@ -240,7 +252,7 @@ public class PointsCountManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ShowResults()
     {
-        ResultsUI.Instance.ShowResults();
+        ResultsUI.Instance?.ShowResults();
     }
 
     public NetworkDictionary<PlayerRef, int> GetResults()

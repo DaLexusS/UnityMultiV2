@@ -18,12 +18,12 @@ public class TargetPlayerDropdown : MonoBehaviour
     
     private void OnEnable()
     {
-        NetworkManager.onJoinedLobby += RefreshDropDownList;
+        NetworkManager.JoinedLobby += RefreshDropDownList;
     }
 
     private void OnDisable()
     {
-        NetworkManager.onJoinedLobby -= RefreshDropDownList;
+        NetworkManager.JoinedLobby -= RefreshDropDownList;
       
     }
 

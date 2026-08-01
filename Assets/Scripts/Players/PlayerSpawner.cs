@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Fusion;
 using UnityEngine;
 
@@ -16,31 +17,39 @@ public class PlayerSpawner : NetworkBehaviour
     [Header("Managers")]
     [SerializeField] private NetworkPrefabRef pointsCountManagerPrefab;
 
-    private bool localSpawnRequestSent;
-    private bool localPlayerSpawnInProgress;
-    private bool localPlayerSpawned;
-    private bool pointsManagerSpawnRequested;
+    private bool _localSpawnRequestSent;
+    private bool _localPlayerSpawnInProgress;
+    private bool _localPlayerSpawned;
+    private bool _pointsManagerSpawnRequested;
 
     public override void Spawned()
     {
         if (Object.HasStateAuthority &&
             Runner.IsSharedModeMasterClient)
         {
-            SpawnPointsCountManager();
+            AsyncTaskRunner.Run(
+                SpawnPointsCountManagerAsync(),
+                this,
+                "Could not create the score manager."
+            );
         }
 
-        RequestLocalPlayerSpawn();
+        AsyncTaskRunner.Run(
+            RequestLocalPlayerSpawnAsync(),
+            this,
+            "Could not request the local player spawn."
+        );
     }
 
-    private async void SpawnPointsCountManager()
+    private async Task SpawnPointsCountManagerAsync()
     {
-        if (pointsManagerSpawnRequested)
+        if (_pointsManagerSpawnRequested)
             return;
 
         if (PointsCountManager.Instance != null)
             return;
 
-        pointsManagerSpawnRequested = true;
+        _pointsManagerSpawnRequested = true;
 
         try
         {
@@ -51,21 +60,21 @@ public class PlayerSpawner : NetworkBehaviour
         catch (Exception exception)
         {
             Debug.LogException(exception, this);
-            pointsManagerSpawnRequested = false;
+            _pointsManagerSpawnRequested = false;
         }
     }
 
-    private async void RequestLocalPlayerSpawn()
+    private async Task RequestLocalPlayerSpawnAsync()
     {
-        if (localSpawnRequestSent ||
-            localPlayerSpawned)
+        if (_localSpawnRequestSent ||
+            _localPlayerSpawned)
         {
             return;
         }
         
         while (ReadyManager.Instance == null)
         {
-            await Awaitable.NextFrameAsync();
+            await Awaitable.NextFrameAsync(destroyCancellationToken);
         }
 
         int confirmedSkinId =
@@ -83,7 +92,7 @@ public class PlayerSpawner : NetworkBehaviour
             return;
         }
 
-        localSpawnRequestSent = true;
+        _localSpawnRequestSent = true;
 
         RPC_RequestSpawn();
     }
@@ -204,14 +213,18 @@ public class PlayerSpawner : NetworkBehaviour
             return;
         }
 
-        SpawnLocalPlayer(spawnPointIndex);
+        AsyncTaskRunner.Run(
+            SpawnLocalPlayerAsync(spawnPointIndex),
+            this,
+            "Could not spawn the local player."
+        );
     }
 
-    private async void SpawnLocalPlayer(
+    private async Task SpawnLocalPlayerAsync(
         int spawnPointIndex)
     {
-        if (localPlayerSpawned ||
-            localPlayerSpawnInProgress)
+        if (_localPlayerSpawned ||
+            _localPlayerSpawnInProgress)
         {
             return;
         }
@@ -227,7 +240,7 @@ public class PlayerSpawner : NetworkBehaviour
             return;
         }
 
-        localPlayerSpawnInProgress = true;
+        _localPlayerSpawnInProgress = true;
 
         try
         {
@@ -286,10 +299,12 @@ public class PlayerSpawner : NetworkBehaviour
 
             SetLocalCamera(selectedSpawnPoint);
 
-            localPlayerSpawned = true;
+            _localPlayerSpawned = true;
 
-            RegisterPlayerWhenManagerIsReady(
-                Runner.LocalPlayer
+            AsyncTaskRunner.Run(
+                RegisterPlayerWhenManagerIsReadyAsync(),
+                this,
+                "Could not register the local player for scoring."
             );
         }
         catch (Exception exception)
@@ -298,7 +313,7 @@ public class PlayerSpawner : NetworkBehaviour
         }
         finally
         {
-            localPlayerSpawnInProgress = false;
+            _localPlayerSpawnInProgress = false;
         }
     }
 
@@ -334,8 +349,7 @@ public class PlayerSpawner : NetworkBehaviour
         );
     }
 
-    private async void RegisterPlayerWhenManagerIsReady(
-        PlayerRef player)
+    private async Task RegisterPlayerWhenManagerIsReadyAsync()
     {
         const int maximumWaitFrames = 600;
 
@@ -346,7 +360,7 @@ public class PlayerSpawner : NetworkBehaviour
         {
             waitedFrames++;
 
-            await Awaitable.NextFrameAsync();
+            await Awaitable.NextFrameAsync(destroyCancellationToken);
         }
 
         if (PointsCountManager.Instance == null)
@@ -359,12 +373,10 @@ public class PlayerSpawner : NetworkBehaviour
             return;
         }
 
-        PointsCountManager.Instance.RPC_RegisterPlayer(
-            player
-        );
+        PointsCountManager.Instance.RPC_RegisterPlayer();
     }
     
-    public void ExitTheGAmeToMenu()
+    public void ExitTheGameToMenu()
     {
         if (NetworkManager.Instance != null)
         {
@@ -372,6 +384,10 @@ public class PlayerSpawner : NetworkBehaviour
             return;
         }
 
-        Runner.Shutdown();
+        AsyncTaskRunner.Run(
+            Runner.Shutdown(),
+            this,
+            "Could not leave the game."
+        );
     }
 }

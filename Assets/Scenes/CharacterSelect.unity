@@ -549,7 +549,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: faf97ffac9e4eec4186311dc9fe43424, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectorUI
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::SelectorUI
   playerPanelPrefab: {fileID: 372369938424949580, guid: d9969307026b43e4e8c4533b23632dc5, type: 3}
   selectorPanel: {fileID: 215423726}
 --- !u!4 &625754022
@@ -578,7 +578,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01005c932d49a6243b561fadd63a0646, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ReadyManager
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ReadyManager
   gameplaySceneBuildIndex: 2
   chatSceneBuildIndex: 3
   _SelectedSkins: 

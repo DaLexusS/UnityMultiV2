@@ -1,36 +1,34 @@
 using Fusion;
 using UnityEngine;
-using Object = System.Object;
 
 public class PlayerAnimatorController : NetworkBehaviour
 {
    
    [SerializeField] private NetworkMecanimAnimator networkAnimator;
-   private Animator Animator;
+   private Animator _animator;
    
-   private static readonly int WALKING_BOOL = Animator.StringToHash("IsWalking");
+   private static readonly int WalkingBoolHash = Animator.StringToHash("IsWalking");
    
-   private static readonly int HIT_TRIGGER = Animator.StringToHash("WasHit");
+   private static readonly int HitTriggerHash = Animator.StringToHash("WasHit");
    
-   private static readonly int ATTACK_TRIGGER = Animator.StringToHash("ToThrow");
+   private static readonly int AttackTriggerHash = Animator.StringToHash("ToThrow");
    
-   private static readonly int DEATH_TRIGGER = Animator.StringToHash("WasKilled");
+   private static readonly int DeathTriggerHash = Animator.StringToHash("WasKilled");
    public void SetAnimator(Animator animator)
    {
-      Animator = animator;
-      networkAnimator.Animator = Animator;
-      Debug.LogWarning("Animator set");
+      _animator = animator;
+      networkAnimator.Animator = _animator;
    }
 
    public void SetWalkingAnimation(bool status)
    {
-      Animator.SetBool(WALKING_BOOL, status);
+      _animator.SetBool(WalkingBoolHash, status);
    }
 
 
    public void ActivateHitAnimation()
    {
-      if (!!Object.HasStateAuthority) return;
+       if (!Object.HasStateAuthority) return;
       
       RPC_ActivateHitAnimation();
    }
@@ -53,19 +51,19 @@ public class PlayerAnimatorController : NetworkBehaviour
    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
    private void RPC_ActivateAttackAnimation()
    {
-      Animator.SetTrigger(ATTACK_TRIGGER);
+      _animator.SetTrigger(AttackTriggerHash);
    }
 
    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
    private void RPC_ActivateHitAnimation()
    {
-      Animator.SetTrigger(HIT_TRIGGER);
+      _animator.SetTrigger(HitTriggerHash);
    }
 
    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
    private void RPC_ActivateDeathAnimation()
    {
-      Animator.SetTrigger(DEATH_TRIGGER);
+      _animator.SetTrigger(DeathTriggerHash);
    }
    
    

@@ -647,7 +647,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cdadd498bc60e24428b4b943f611de8c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerItem
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::PlayerItem
   nicknameText: {fileID: 2318040366057738438}
   readyStatusText: {fileID: 226510950550924}
   readyButton: {fileID: 3912575703695342613}

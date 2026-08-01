@@ -70,7 +70,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2c5415d325c9164db7b5944870f2ca8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Bomb
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::Bomb
   flySpeed: 10
   damage: 50
   visual: {fileID: 4529523641812085076}

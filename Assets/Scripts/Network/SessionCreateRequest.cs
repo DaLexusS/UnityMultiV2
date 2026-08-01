@@ -1,12 +1,12 @@
 public class SessionCreateRequest
 {
-    public string SessionName;
-    public bool ShowInLobby;
-    public string GameMode;
-    public string Map;
-    public string Region;
-    public int PlayerCount;
-    public bool PasswordProtected;
-    public string Password;
-    public string PlayerNickname;
+    public string SessionName { get; set; }
+    public bool ShowInLobby { get; set; }
+    public string GameMode { get; set; }
+    public string Map { get; set; }
+    public string Region { get; set; }
+    public int PlayerCount { get; set; }
+    public bool PasswordProtected { get; set; }
+    public string Password { get; set; }
+    public string PlayerNickname { get; set; }
 }

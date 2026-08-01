@@ -1,13 +1,23 @@
 using Fusion;
+using System.Threading.Tasks;
 using UnityEngine;
 
-public class StartMultiGameForTest : MonoBehaviour
+public class MultiplayerTestBootstrap : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private NetworkRunner networkRunner;
 
-    private async void Start()
+    private void Start()
+    {
+        AsyncTaskRunner.Run(
+            StartTestSessionAsync(),
+            this,
+            "Failed to start the test session."
+        );
+    }
+
+    private async Task StartTestSessionAsync()
     {
         var result = await networkRunner.StartGame(new StartGameArgs()
         {
@@ -19,7 +29,7 @@ public class StartMultiGameForTest : MonoBehaviour
 
         if (!result.Ok)
         {
-            ErrorHandlerUi.ReportError($"Failed to start test session: {result.ShutdownReason}");
+            ErrorMessagePresenter.ReportError($"Failed to start test session: {result.ShutdownReason}");
         }
     }
 

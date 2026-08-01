@@ -1,13 +1,12 @@
 using Fusion;
-using Fusion.Sockets;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
+public partial class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     public static NetworkManager Instance { get; private set; }
 
@@ -17,6 +16,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef characterSelectionNetworkManager;
     [SerializeField] private bool autoJoinLobbyOnStart = true;
     [SerializeField] private string defaultLobbyName = "Default";
+    [SerializeField] private int lobbySelectionSceneBuildIndex;
+    [SerializeField] private int characterSelectionSceneBuildIndex = 1;
     private string _currentLobbyName;
     private bool _isJoiningLobby;
     private bool _isIntentionalShutdown;
@@ -26,33 +27,40 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     public NetworkRunner Runner => networkRunner;
     public string LocalPlayerNickname { get; private set; }
 
-    public static UnityAction onJoinedLobby;
-    public static UnityAction<bool> onNoSessionsActive;
-    public static UnityAction<bool> onHostCheck;
-    public static UnityAction<List<SessionInfo>> onSessionCreated;
-    public static UnityAction<SessionInfo> onLocalPlayerJoined;
-    public static UnityAction onSessionStartSucceeded;
+    public static event UnityAction JoinedLobby;
+    public static event UnityAction<bool> NoSessionsStateChanged;
+    public static event UnityAction<bool> HostStateChanged;
+    public static event UnityAction<List<SessionInfo>> SessionListUpdated;
+    public static event UnityAction<SessionInfo> SessionPlayerCountChanged;
+    public static event UnityAction SessionStartSucceeded;
   
     private void OnEnable()
     {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogError("Duplicate NetworkManager detected.", this);
+            enabled = false;
+            return;
+        }
+
         Instance = this;
-        LobbyItemHandler.onLobbyJoined += JoinLobby;
-        SessionListUiHandler.onSessionCreated += CreateSession;
-        SessionListUiHandler.onSessionSettingsChanged += UpdateSessionSettings;
-        SessionListUiHandler.onHostStartedGame += StartMatch;
-        SessionListUiHandler.onHostClosedSession += CloseSessionForEveryone;
-        SessionListUiHandler.onLocalPlayerLeftSession += LeaveSession;
-        SessionListUiHandler.onBackToLobbySelection += BackToLobbySelection;
+        LobbyItemHandler.LobbyJoinRequested += JoinLobby;
+        SessionListViewController.SessionCreateRequested += CreateSession;
+        SessionListViewController.SessionSettingsChanged += UpdateSessionSettings;
+        SessionListViewController.HostStartRequested += StartMatch;
+        SessionListViewController.HostCloseRequested += CloseSessionForEveryone;
+        SessionListViewController.LocalPlayerLeaveRequested += LeaveSession;
+        SessionListViewController.BackToLobbyRequested += BackToLobbySelection;
     }
     private void OnDisable()
     {
-        LobbyItemHandler.onLobbyJoined -= JoinLobby;
-        SessionListUiHandler.onSessionCreated -= CreateSession;
-        SessionListUiHandler.onSessionSettingsChanged -= UpdateSessionSettings;
-        SessionListUiHandler.onHostStartedGame -= StartMatch;
-        SessionListUiHandler.onHostClosedSession -= CloseSessionForEveryone;
-        SessionListUiHandler.onLocalPlayerLeftSession -= LeaveSession;
-        SessionListUiHandler.onBackToLobbySelection -= BackToLobbySelection;
+        LobbyItemHandler.LobbyJoinRequested -= JoinLobby;
+        SessionListViewController.SessionCreateRequested -= CreateSession;
+        SessionListViewController.SessionSettingsChanged -= UpdateSessionSettings;
+        SessionListViewController.HostStartRequested -= StartMatch;
+        SessionListViewController.HostCloseRequested -= CloseSessionForEveryone;
+        SessionListViewController.LocalPlayerLeaveRequested -= LeaveSession;
+        SessionListViewController.BackToLobbyRequested -= BackToLobbySelection;
 
         if (Instance == this)
             Instance = null;
@@ -66,7 +74,16 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             JoinLobby(defaultLobbyName);
     }
 
-    public async void JoinLobby(string lobbyName)
+    public void JoinLobby(string lobbyName)
+    {
+        AsyncTaskRunner.Run(
+            JoinLobbyAsync(lobbyName),
+            this,
+            "Could not connect to the lobby."
+        );
+    }
+
+    private async Task JoinLobbyAsync(string lobbyName)
     {
         if (string.IsNullOrWhiteSpace(lobbyName))
             lobbyName = defaultLobbyName;
@@ -77,7 +94,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (networkRunner.LobbyInfo.IsValid && networkRunner.LobbyInfo.Name == lobbyName)
         {
             _currentLobbyName = lobbyName;
-            onJoinedLobby?.Invoke();
+            JoinedLobby?.Invoke();
             return;
         }
 
@@ -88,17 +105,21 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (result.Ok)
         {
             _currentLobbyName = lobbyName;
-            onJoinedLobby?.Invoke();
+            JoinedLobby?.Invoke();
         }
         else
         {
             ReportServerError($"Couldn't connect to lobby: {GetStartGameError(result)}");
         }
     }
-    public async void CreateSession(SessionCreateRequest request)
+    public void CreateSession(SessionCreateRequest request)
     {
         SetLocalPlayerNickname(request.PlayerNickname);
-        await StartSession(request.SessionName, request.ShowInLobby, request.GameMode, request.Map, request.Region, request.PlayerCount, request.PasswordProtected, request.Password);
+        AsyncTaskRunner.Run(
+            StartSessionAsync(request.SessionName, request.ShowInLobby, request.GameMode, request.Map, request.Region, request.PlayerCount, request.PasswordProtected, request.Password),
+            this,
+            "Could not create the session."
+        );
     }
 
     public void UpdateSessionSettings(SessionCreateRequest request)
@@ -149,7 +170,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         sessionManager.KickPlayer(player);
     }
 
-    public async void StartSession(string sessionName)
+    public void StartSession(string sessionName)
     {
         if (string.IsNullOrWhiteSpace(LocalPlayerNickname))
         {
@@ -157,10 +178,14 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             return;
         }
 
-        await StartSession(sessionName, true, "Default", "Default", "Default", 4, false, string.Empty);
+        AsyncTaskRunner.Run(
+            StartSessionAsync(sessionName, true, "Default", "Default", "Default", 4, false, string.Empty),
+            this,
+            "Could not join the session."
+        );
     }
 
-    private async System.Threading.Tasks.Task StartSession(string sessionName, bool isVisible, string gameMode, string map, string region, int playerCount, bool passwordProtected, string password)
+    private async Task StartSessionAsync(string sessionName, bool isVisible, string gameMode, string map, string region, int playerCount, bool passwordProtected, string password)
     {
         var result = await networkRunner.StartGame(new StartGameArgs()
         {
@@ -181,10 +206,19 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             return;
         }
 
-        onSessionStartSucceeded?.Invoke();
+        SessionStartSucceeded?.Invoke();
     }
     
-    public async void StartMatch()
+    public void StartMatch()
+    {
+        AsyncTaskRunner.Run(
+            StartMatchAsync(),
+            this,
+            "Could not start the match."
+        );
+    }
+
+    private async Task StartMatchAsync()
     {
         if (!networkRunner.IsSharedModeMasterClient)
         {
@@ -203,7 +237,17 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
         BroadcastMatchSettingsJson();
 
-        await networkRunner.LoadScene(SceneRef.FromIndex(1));
+        if (!IsValidSceneBuildIndex(characterSelectionSceneBuildIndex))
+        {
+            ReportServerError(
+                $"Invalid character-selection scene build index: {characterSelectionSceneBuildIndex}"
+            );
+            return;
+        }
+
+        await networkRunner.LoadScene(
+            SceneRef.FromIndex(characterSelectionSceneBuildIndex)
+        );
     }
 
     public void CloseSessionForEveryone()
@@ -223,7 +267,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         networkRunner.SessionInfo.IsOpen = false;
         networkRunner.SessionInfo.IsVisible = false;
 
-        CharacterSelectionNetworkManager sessionManager = FindAnyObjectByType<CharacterSelectionNetworkManager>();
+        CharacterSelectionNetworkManager sessionManager = CharacterSelectionNetworkManager.Instance;
 
         if (sessionManager != null)
         {
@@ -236,9 +280,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public async void LeaveSession()
+    public void LeaveSession()
     {
-        await ShutdownAndLoadLobbySelection();
+        AsyncTaskRunner.Run(
+            ShutdownAndLoadLobbySelection(),
+            this,
+            "Could not leave the session."
+        );
     }
 
     public void LeaveSessionAfterDelay(float delay)
@@ -246,9 +294,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         StartCoroutine(LeaveSessionAfterDelayRoutine(delay));
     }
 
-    public async void BackToLobbySelection()
+    public void BackToLobbySelection()
     {
-        await ShutdownAndLoadLobbySelection();
+        LeaveSession();
     }
 
     public async System.Threading.Tasks.Task ShutdownAndLoadLobbySelection()
@@ -258,7 +306,15 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (networkRunner != null && networkRunner.IsRunning)
             await networkRunner.Shutdown();
 
-        SceneManager.LoadScene(0);
+        if (!IsValidSceneBuildIndex(lobbySelectionSceneBuildIndex))
+        {
+            ReportServerError(
+                $"Invalid lobby scene build index: {lobbySelectionSceneBuildIndex}"
+            );
+            return;
+        }
+
+        SceneManager.LoadScene(lobbySelectionSceneBuildIndex);
     }
 
     private IEnumerator LeaveSessionAfterDelayRoutine(float delay)
@@ -310,7 +366,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private void ReportServerError(string message)
     {
-        ErrorHandlerUi.ReportError(message);
+        ErrorMessagePresenter.ReportError(message);
     }
 
     private static string GetStartGameError(StartGameResult result)
@@ -321,133 +377,11 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         return result.ShutdownReason.ToString();
     }
 
-    public void OnGameStarted(NetworkRunner obj)
+    private static bool IsValidSceneBuildIndex(int buildIndex)
     {
-        RefreshHostState(true, "Game started");
-        
-        if (networkRunner.IsSharedModeMasterClient)
-        {
-            NetworkObject chatMan = networkRunner.Spawn(chatManagerPrefab);
-            DontDestroyOnLoad(chatMan);
-            NetworkObject charSelMan =networkRunner.Spawn(characterSelectionNetworkManager);
-            DontDestroyOnLoad(charSelMan);
-        }
-
-        SubmitLocalNickname();
+        return buildIndex >= 0 &&
+               buildIndex < SceneManager.sceneCountInBuildSettings;
     }
-
-    void INetworkRunnerCallbacks.OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
-    {
-
-    }
-
-    void INetworkRunnerCallbacks.OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
-    {
-    }
-
-    void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef player)
-    {
-        onLocalPlayerJoined?.Invoke(runner.SessionInfo);
-
-        if (player == runner.LocalPlayer)
-            SubmitLocalNickname();
-
-        RefreshHostState(false, "Player joined");
-    }
-
-    void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-    {
-        if (runner.IsSharedModeMasterClient && CharacterSelectionNetworkManager.Instance != null)
-            CharacterSelectionNetworkManager.Instance.RemovePlayer(player);
-
-        onLocalPlayerJoined?.Invoke(runner.SessionInfo);
-        RefreshHostState(true, "Player left");
-    }
-
-    void INetworkRunnerCallbacks.OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
-    {
-        if (_isIntentionalShutdown)
-            return;
-
-        if (shutdownReason != ShutdownReason.Ok)
-            ReportServerError($"Network shutdown: {shutdownReason}");
-    }
-
-    void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
-    {
-        if (_isIntentionalShutdown)
-            return;
-
-        ReportServerError($"Disconnected from server: {reason}");
-    }
-
-    void INetworkRunnerCallbacks.OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
-    {
-    }
-
-    void INetworkRunnerCallbacks.OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
-    {
-        ReportServerError($"Connection failed: {reason}");
-    }
-
-    void INetworkRunnerCallbacks.OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
-    {
-    }
-
-    void INetworkRunnerCallbacks.OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data)
-    {
-    }
-
-    void INetworkRunnerCallbacks.OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)
-    {
-    }
-
-    void INetworkRunnerCallbacks.OnInput(NetworkRunner runner, NetworkInput input)
-    {
-    }
-
-    void INetworkRunnerCallbacks.OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
-    {
-    }
-
-    void INetworkRunnerCallbacks.OnConnectedToServer(NetworkRunner runner)
-    {
-       
-    }
-
-    void INetworkRunnerCallbacks.OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
-    {
-        SessionMetadata.LogSessionList("NetworkManager.OnSessionListUpdated", sessionList);
-
-        if (sessionList.Count <= 0)
-        {
-            onNoSessionsActive?.Invoke(true);
-        }
-        else
-        {
-            onNoSessionsActive?.Invoke(false);
-        }
-
-        onSessionCreated?.Invoke(sessionList);
-    }
-
-    void INetworkRunnerCallbacks.OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
-    {
-        
-    }
-
-    void INetworkRunnerCallbacks.OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
-    {
-        RefreshHostState(true, "Host migration");
-    }
-
-    void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner)
-    {
-        RefreshHostState(true, "Scene load done");
-    }
-
-    void INetworkRunnerCallbacks.OnSceneLoadStart(NetworkRunner runner)
-    {    }
 
     private void RefreshHostState(bool forceNotify, string reason)
     {
@@ -461,7 +395,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         _lastKnownHostState = isHost;
 
         if (changed || forceNotify)
-            onHostCheck?.Invoke(isHost);
+            HostStateChanged?.Invoke(isHost);
 
         if (!isHost)
             return;

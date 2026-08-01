@@ -13,10 +13,17 @@ public class ResultsUI : MonoBehaviour
     {
         Instance = this;
     }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
+    }
     
     public void ShowResults()
     {
         resultsPanel.SetActive(true);
+        resultsText.text = string.Empty;
         
         var sortedResults = 
             PointsCountManager.Instance.GetResults().OrderByDescending(result => result.Value)

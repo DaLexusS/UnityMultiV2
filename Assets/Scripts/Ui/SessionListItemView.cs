@@ -5,20 +5,21 @@ using Fusion;
 using System;
 using UnityEngine.Events;
 
-public class SessionInfoListUiItem : MonoBehaviour
+public class SessionListItemView : MonoBehaviour
 {
-    public static UnityAction<SessionInfo> onSessionJoin;
-    public TextMeshProUGUI sessionNameText;
-    public TextMeshProUGUI sessionCountText;
-    public TextMeshProUGUI sessionStatusText;
+    public static event UnityAction<SessionInfo> SessionJoinRequested;
+
+    [SerializeField] private TextMeshProUGUI sessionNameText;
+    [SerializeField] private TextMeshProUGUI sessionCountText;
+    [SerializeField] private TextMeshProUGUI sessionStatusText;
     [SerializeField] private TextMeshProUGUI sessionModeText;
     [SerializeField] private TextMeshProUGUI sessionMapText;
-    public Button joinButton;
+    [SerializeField] private Button joinButton;
 
-    SessionInfo sessionInfo;
+    private SessionInfo _sessionInfo;
     public void SetInformation(SessionInfo sessionInfo)
     {
-        this.sessionInfo = sessionInfo;
+        _sessionInfo = sessionInfo;
 
         sessionNameText.text = sessionInfo.Name;
         sessionCountText.text = $"{sessionInfo.PlayerCount}/{sessionInfo.MaxPlayers}";
@@ -55,10 +56,15 @@ public class SessionInfoListUiItem : MonoBehaviour
 
     public void Join()
     {
-        if (sessionInfo == null || !sessionInfo.IsOpen || SessionMetadata.IsStarted(sessionInfo) || sessionInfo.PlayerCount >= sessionInfo.MaxPlayers)
+        if (_sessionInfo == null ||
+            !_sessionInfo.IsOpen ||
+            SessionMetadata.IsStarted(_sessionInfo) ||
+            _sessionInfo.PlayerCount >= _sessionInfo.MaxPlayers)
+        {
             return;
+        }
 
-        onSessionJoin?.Invoke(sessionInfo);
+        SessionJoinRequested?.Invoke(_sessionInfo);
     }
 
     private static string GetSessionProperty(SessionInfo sessionInfo, string key)

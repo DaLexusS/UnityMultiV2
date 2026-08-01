@@ -12,7 +12,7 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
         private set;
     }
 
-    public static UnityAction onLobbyPlayersChanged;
+    public static event UnityAction LobbyPlayersChanged;
 
     [Networked, Capacity(4)]
     public NetworkArray<PlayerRef> LobbyPlayers => default;
@@ -36,7 +36,7 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
 
         NetworkManager.Instance?.SubmitLocalNickname();
 
-        onLobbyPlayersChanged?.Invoke();
+        LobbyPlayersChanged?.Invoke();
     }
 
     public override void Despawned(
@@ -48,7 +48,7 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
             Instance = null;
         }
 
-        onLobbyPlayersChanged?.Invoke();
+        LobbyPlayersChanged?.Invoke();
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -258,7 +258,7 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
     {
         if (!Runner.IsSharedModeMasterClient)
         {
-            ErrorHandlerUi.ReportError(
+            ErrorMessagePresenter.ShowError(
                 "Only the host can kick players."
             );
 
@@ -267,7 +267,7 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
 
         if (targetPlayer == Runner.LocalPlayer)
         {
-            ErrorHandlerUi.ReportError(
+            ErrorMessagePresenter.ShowError(
                 "Host cannot kick themself."
             );
 
@@ -279,7 +279,7 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
         RemovePlayer(targetPlayer);
         Runner.Disconnect(targetPlayer);
 
-        ErrorHandlerUi.ReportError(
+        ErrorMessagePresenter.ShowError(
             "Player kicked from lobby."
         );
     }
@@ -287,14 +287,14 @@ public class CharacterSelectionNetworkManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_LobbyPlayersChanged()
     {
-        onLobbyPlayersChanged?.Invoke();
+        LobbyPlayersChanged?.Invoke();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_KickedFromLobby(
         [RpcTarget] PlayerRef targetPlayer)
     {
-        ErrorHandlerUi.ReportError(
+        ErrorMessagePresenter.ShowError(
             "You were kicked from the lobby."
         );
 

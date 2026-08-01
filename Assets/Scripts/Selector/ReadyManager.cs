@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Fusion;
 using UnityEngine.SceneManagement;
 
@@ -18,7 +19,7 @@ public class ReadyManager : NetworkBehaviour
 
     public static ReadyManager Instance { get; private set; }
 
-    public static event Action OnReadyStateChanged;
+    public static event Action ReadyStateChanged;
 
 
     [SerializeField] private int gameplaySceneBuildIndex;
@@ -38,9 +39,9 @@ public class ReadyManager : NetworkBehaviour
     public override void Spawned()
     {
         Instance = this;
-        DontDestroyOnLoad(Instance);
+        DontDestroyOnLoad(gameObject);
         // OnChangedRender is not called for initial values.
-        OnReadyStateChanged?.Invoke();
+        ReadyStateChanged?.Invoke();
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -50,12 +51,12 @@ public class ReadyManager : NetworkBehaviour
             Instance = null;
         }
 
-        OnReadyStateChanged?.Invoke();
+        ReadyStateChanged?.Invoke();
     }
 
     private void HandleRevisionChanged()
     {
-        OnReadyStateChanged?.Invoke();
+        ReadyStateChanged?.Invoke();
     }
 
     // Called by the local player after clicking a skin button.
@@ -171,7 +172,7 @@ public class ReadyManager : NetworkBehaviour
         ReadyStates.Set(playerSlot, 1);
 
         MarkStateChanged();
-        TryLoadGameplayScene();
+        _ = TryLoadGameplayScenesAsync();
     }
 
     public int GetSelectedSkin(PlayerRef player)
@@ -297,10 +298,10 @@ public class ReadyManager : NetworkBehaviour
             return;
         }
 
-        TryLoadGameplayScene();
+        _ = TryLoadGameplayScenesAsync();
     }
 
-    private void TryLoadGameplayScene()
+    private async Task TryLoadGameplayScenesAsync()
     {
         if (SceneLoadStarted)
         {
@@ -385,11 +386,43 @@ public class ReadyManager : NetworkBehaviour
             return;
         }
 
+        if (chatSceneBuildIndex < 0 ||
+            chatSceneBuildIndex >= SceneManager.sceneCountInBuildSettings)
+        {
+            Debug.LogError(
+                $"Invalid chat scene build index: {chatSceneBuildIndex}",
+                this
+            );
+
+            return;
+        }
+
         SceneLoadStarted = true;
         MarkStateChanged();
 
-        Runner.LoadScene(SceneRef.FromIndex(gameplaySceneBuildIndex), LoadSceneMode.Single);
-        Runner.LoadScene(SceneRef.FromIndex(chatSceneBuildIndex), LoadSceneMode.Additive);
+        try
+        {
+            await Runner.LoadScene(
+                SceneRef.FromIndex(gameplaySceneBuildIndex),
+                LoadSceneMode.Single
+            );
+
+            await Runner.LoadScene(
+                SceneRef.FromIndex(chatSceneBuildIndex),
+                LoadSceneMode.Additive
+            );
+        }
+        catch (Exception exception)
+        {
+            if (Object != null && Object.HasStateAuthority)
+            {
+                SceneLoadStarted = false;
+                MarkStateChanged();
+            }
+
+            Debug.LogException(exception, this);
+            ErrorMessagePresenter.ReportError("Failed to load the gameplay scenes.");
+        }
     }
 
     private bool IsReadyAtSlot(int playerSlot)
@@ -448,7 +481,7 @@ public class ReadyManager : NetworkBehaviour
     private void RPC_SkinSelectionDenied(
         [RpcTarget] PlayerRef targetPlayer)
     {
-        ErrorHandlerUi.ReportError(
+        ErrorMessagePresenter.ShowError(
             "This skin is already locked by another player."
         );
     }
@@ -461,18 +494,18 @@ public class ReadyManager : NetworkBehaviour
         switch (reason)
         {
             case ReadyDeniedReason.NoSkinSelected:
-                ErrorHandlerUi.ReportError(
+                ErrorMessagePresenter.ShowError(
                     "Select a skin before pressing Ready."
                 );
                 break;
 
             case ReadyDeniedReason.SkinAlreadyTaken:
-                ErrorHandlerUi.ReportError(
+                ErrorMessagePresenter.ShowError(
                     "This skin was locked by another player. Select another skin."
                 );
                 break;
         }
 
-        OnReadyStateChanged?.Invoke();
+        ReadyStateChanged?.Invoke();
     }
 }

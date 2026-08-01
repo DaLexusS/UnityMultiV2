@@ -432,7 +432,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1b671751cf2650c4b86f4eaf7ec10462, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkManager
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::NetworkManager
   networkRunner: {fileID: 778845450}
   sceneManager: {fileID: 778845453}
   chatManagerPrefab:
@@ -441,6 +441,8 @@ MonoBehaviour:
     RawGuidValue: 44eb9e5283959664f9a29ef1a7464a05
   autoJoinLobbyOnStart: 1
   defaultLobbyName: Default
+  lobbySelectionSceneBuildIndex: 0
+  characterSelectionSceneBuildIndex: 1
 --- !u!114 &778845450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5505,7 +5507,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5dfc247348d1a3c4f9a6e5c9466b6df9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::AudioManager
   sfxPool: {fileID: 1269445374}
   sfxMixerGroup: {fileID: 24300002, guid: 2ee0c75f5a23fe145bd2d2c0a4d67946, type: 2}
   uiHover: {fileID: 8300000, guid: 173f657db3363324a8afbb6accceba98, type: 3}
@@ -5521,7 +5523,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 638df245fe44d9f408130b7552b49097, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AudioPool
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::AudioPool
   poolSize: 50
 --- !u!4 &1269445375
 Transform:

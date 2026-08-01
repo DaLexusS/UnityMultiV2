@@ -1063,7 +1063,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2090f7e59258450449c111f242ff7573, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MessageSendMechanism
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::MessageSendMechanism
   field: {fileID: 743700341}
   networkRunner: {fileID: 1109338567}
   _targetPlayerDropdown: {fileID: 1669771977}
@@ -1758,7 +1758,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 568781088}
-        m_TargetAssemblyTypeName: MessageSendMechanism, Assembly-CSharp
+        m_TargetAssemblyTypeName: MessageSendMechanism, UnityMultiV2.Runtime
         m_MethodName: SendMessage
         m_Mode: 1
         m_Arguments:
@@ -2215,7 +2215,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a4cf646d7f26de43bc5a02337492e22, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetWorkLobbyChatTest
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ChatNetworkTestHarness
   chatManagerPrefab:
     RawGuidValue: bd4891cfe476f304c995878b593b5e6c
   networkRunner: {fileID: 1109338567}
@@ -2263,7 +2263,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b5780731be3d834aa349aa2927663c4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ChatUIManager
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ChatUIManager
   textMessagePrefab: {fileID: 3105916437345748033, guid: 7aa2735c96f0b6d4bb40723e5dc67af1, type: 3}
   content: {fileID: 917645458}
   scrollRect: {fileID: 97034603}
@@ -2661,7 +2661,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d45b3b1989d90074d9fd990daf8183d2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TargetPlayerDropdown
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::TargetPlayerDropdown
   dropdown: {fileID: 683617296}
   netRunner: {fileID: 1109338567}
 --- !u!4 &1669771978

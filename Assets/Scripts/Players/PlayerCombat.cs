@@ -1,5 +1,7 @@
 using Fusion;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.InputSystem;
 
 public class PlayerCombat : NetworkBehaviour
@@ -9,14 +11,16 @@ public class PlayerCombat : NetworkBehaviour
     [SerializeField] private Bomb bombPrefab;
 
     [SerializeField] private Transform bombSpawnPoint;
-    [SerializeField] private float coolDown = 1.5f;
-    private bool bombIsSpawned;
-    private Bomb currentbomb;
+    [FormerlySerializedAs("coolDown")]
+    [SerializeField] private float _cooldownSeconds = 1.5f;
+    private bool _bombIsSpawned;
+    private Bomb _currentBomb;
 
     public void Update()
     {
         if (!Object.HasStateAuthority) return;
-        if (bombIsSpawned) return;
+        if (_bombIsSpawned) return;
+        if (Keyboard.current == null) return;
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
@@ -30,21 +34,30 @@ public class PlayerCombat : NetworkBehaviour
         _playerMovement.StopMovement();
     }
 
-    public async void SpawnBomb()
+    public void SpawnBomb()
+    {
+        AsyncTaskRunner.Run(
+            SpawnBombAsync(),
+            this,
+            "Could not spawn the projectile."
+        );
+    }
+
+    private async Task SpawnBombAsync()
     {
         if (!Object.HasStateAuthority) return;
         
-        if (bombIsSpawned) return;
+        if (_bombIsSpawned) return;
         
-        bombIsSpawned = true;
+        _bombIsSpawned = true;
         
-        currentbomb = Runner.Spawn(bombPrefab, bombSpawnPoint.position,  transform.rotation);
-        currentbomb.Initialize(Object.InputAuthority);
+        _currentBomb = Runner.Spawn(bombPrefab, bombSpawnPoint.position, transform.rotation);
+        _currentBomb.Initialize(Object.InputAuthority);
         
-        await Awaitable.WaitForSecondsAsync(coolDown);
+        await Awaitable.WaitForSecondsAsync(_cooldownSeconds, destroyCancellationToken);
         
-        bombIsSpawned = false;
-        currentbomb = null;
+        _bombIsSpawned = false;
+        _currentBomb = null;
     }
     
 }

@@ -10,9 +10,9 @@ public class PlayerUI : MonoBehaviour
 {
     private sealed class PlayerUIData 
     {
-        public int MaxHp;
-        public int CurrentHp;
-        public string Nickname;
+        public int MaxHealth { get; set; }
+        public int CurrentHp { get; set; }
+        public string Nickname { get; set; }
     }
 
     private readonly Dictionary<PlayerRef, PlayerUIData>
@@ -31,17 +31,23 @@ public class PlayerUI : MonoBehaviour
     {
         Instance = this;
     }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
+    }
     
 
     public void RegisterPlayer(
         PlayerRef player,
-        int maxHp,
+        int maxHealth,
         int currentHp,
         string nickname)
     {
         registeredPlayers[player] = new PlayerUIData
         {
-            MaxHp = maxHp,
+            MaxHealth = maxHealth,
             CurrentHp = currentHp,
             Nickname = nickname
         };
@@ -95,7 +101,7 @@ public class PlayerUI : MonoBehaviour
 
             playerSlots[player] = i;
 
-            slider.maxValue = data.MaxHp;
+            slider.maxValue = data.MaxHealth;
             slider.value = data.CurrentHp;
             slider.gameObject.SetActive(true);
 

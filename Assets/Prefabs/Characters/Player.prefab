@@ -206,7 +206,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab6e5de90e9f0d84e9b930172fec2c42, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::PlayerMovement
   speed: 2.5
   rotationSpeed: 50
   _playerAnimator: {fileID: 8444395466383096995}
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1aea9511af20654d9e81cec38d7ebcb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::PlayerHealth
   _playerMovement: {fileID: 924480037533177669}
   _playerAnimator: {fileID: 8444395466383096995}
   _CurrentHp: 0
@@ -238,7 +238,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0876e33ebd1ebab49a21700ecb603ea1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::PlayerCombat
   _playerMovement: {fileID: 924480037533177669}
   _playerAnimator: {fileID: 8444395466383096995}
   bombPrefab: {fileID: 2401482565369207188, guid: 5174982384c007e488b21d909c4763f0, type: 3}
@@ -255,7 +255,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 91e6e92fcabab2a4e87f9be28a01861b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerSkinChanger
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::PlayerSkinChanger
   _playerMovement: {fileID: 924480037533177669}
   _playerCombat: {fileID: 8364481035990828272}
   _playerHealth: {fileID: 27206135183645212}
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9be409c786052cf45b16b54b424703c8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimatorController
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::PlayerAnimatorController
   networkAnimator: {fileID: 6416476552070402267}
 --- !u!1 &9106816954240943385
 GameObject:

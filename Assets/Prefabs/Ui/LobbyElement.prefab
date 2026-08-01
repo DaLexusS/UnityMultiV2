@@ -123,7 +123,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1540430462023278118}
-        m_TargetAssemblyTypeName: SessionInfoListUiItem, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListItemView, UnityMultiV2.Runtime
         m_MethodName: Join
         m_Mode: 1
         m_Arguments:
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 5547992440036720534}
   scaleTarget: {fileID: 8367156722939861835}
   hoverTextColor: {r: 0, g: 0, b: 0, a: 1}

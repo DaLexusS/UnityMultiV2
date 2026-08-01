@@ -11,9 +11,9 @@ public class SelectorUI : MonoBehaviour
     private void OnEnable()
     {
         CharacterSelectionNetworkManager
-            .onLobbyPlayersChanged += UpdatePlayerList;
+            .LobbyPlayersChanged += UpdatePlayerList;
 
-        ReadyManager.OnReadyStateChanged
+        ReadyManager.ReadyStateChanged
             += RefreshPlayerPanels;
 
         UpdatePlayerList();
@@ -22,9 +22,9 @@ public class SelectorUI : MonoBehaviour
     private void OnDisable()
     {
         CharacterSelectionNetworkManager
-            .onLobbyPlayersChanged -= UpdatePlayerList;
+            .LobbyPlayersChanged -= UpdatePlayerList;
 
-        ReadyManager.OnReadyStateChanged
+        ReadyManager.ReadyStateChanged
             -= RefreshPlayerPanels;
     }
 

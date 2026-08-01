@@ -10,13 +10,37 @@ public class ChatManager : NetworkBehaviour
         Instance = this;
     }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_SendMessageToServer(PlayerRef sender, PlayerRef targetPlayer, string message)
+    public override void Despawned(NetworkRunner runner, bool hasState)
     {
-        
+        if (Instance == this)
+            Instance = null;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SendMessageToServer(
+        PlayerRef targetPlayer,
+        string message,
+        RpcInfo info = default)
+    {
+        PlayerRef sender = info.Source;
+
+        if (sender == PlayerRef.None ||
+            !NetworkInputValidation.TryNormalizeChatMessage(
+                message,
+                out message
+            ))
+        {
+            return;
+        }
+
+        CharacterSelectionNetworkManager playerManager =
+            CharacterSelectionNetworkManager.Instance;
+
+        if (playerManager == null || playerManager.GetPlayerSlot(sender) < 0)
+            return;
+
         string nickname =
-            CharacterSelectionNetworkManager.Instance
-                .GetPlayerNickname(sender);
+            playerManager.GetPlayerNickname(sender);
         
         if (targetPlayer == PlayerRef.None)
         {
@@ -24,20 +48,21 @@ public class ChatManager : NetworkBehaviour
         }
         else
         {
-            RPC_ReceiveMessagePersonal(targetPlayer, nickname, message);
+            if (playerManager.GetPlayerSlot(targetPlayer) >= 0)
+                RPC_ReceiveMessagePersonal(targetPlayer, nickname, message);
         }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ReceiveMessageAll(string nickname, string message)
     {
-        ChatUIManager.Instance.AddMessage(nickname, message);
+        ChatUIManager.Instance?.AddMessage(nickname, message);
     }
     
    
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ReceiveMessagePersonal( [RpcTarget] PlayerRef targetPlayer, string nickname, string message)
     {
-        ChatUIManager.Instance.AddMessage(nickname, message);
+        ChatUIManager.Instance?.AddMessage(nickname, message);
     }
 }

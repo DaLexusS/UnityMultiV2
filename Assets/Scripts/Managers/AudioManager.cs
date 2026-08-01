@@ -30,7 +30,13 @@ public class AudioManager : MonoBehaviour
             sfxPool.Init(sfxMixerGroup);
     }
 
-    public void PlaySfx(SFX sfx, float volume = 1f)
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
+    }
+
+    public void PlaySfx(Sfx sfx, float volume = 1f)
     {
         if (sfxPool == null)
             return;
@@ -39,10 +45,10 @@ public class AudioManager : MonoBehaviour
         
         switch (sfx)
         {
-            case SFX.UI_Hover:
+            case Sfx.UIHover:
                 clip = uiHover;
                 break;
-            case SFX.UI_Click:
+            case Sfx.UIClick:
                 clip = uiClick;
                 break;
         }

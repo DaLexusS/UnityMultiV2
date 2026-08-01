@@ -64,7 +64,7 @@ public class ButtonHoverTextScale : MonoBehaviour, IPointerEnterHandler, IPointe
         _isHovered = true;
 
         if (playHoverSound && AudioManager.Instance != null)
-            AudioManager.Instance.PlaySfx(SFX.UI_Hover, sfxVolume);
+            AudioManager.Instance.PlaySfx(Sfx.UIHover, sfxVolume);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -75,6 +75,6 @@ public class ButtonHoverTextScale : MonoBehaviour, IPointerEnterHandler, IPointe
     public void OnPointerClick(PointerEventData eventData)
     {
         if (playClickSound && AudioManager.Instance != null)
-            AudioManager.Instance.PlaySfx(SFX.UI_Click, sfxVolume);
+            AudioManager.Instance.PlaySfx(Sfx.UIClick, sfxVolume);
     }
 }

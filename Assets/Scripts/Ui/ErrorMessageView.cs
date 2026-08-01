@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class ErrorMessageUi : MonoBehaviour
+public class ErrorMessageView : MonoBehaviour
 {
     [SerializeField] private TMP_Text messageText;
 

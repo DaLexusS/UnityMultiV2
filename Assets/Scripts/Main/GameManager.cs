@@ -1,9 +1,10 @@
-using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] LobbyManagerSettings lobbyManagerSettings;
+    [SerializeField] private LobbyManagerSettings lobbyManagerSettings;
+
+    private LobbyManager _lobbyManager;
 
     private void Awake()
     {
@@ -11,8 +12,7 @@ public class GameManager : MonoBehaviour
     }
     private void RunGame()
     {
-        LobbyManager lobbyManager = new LobbyManager();
-
-        lobbyManager.Init(lobbyManagerSettings);
+        _lobbyManager = new LobbyManager();
+        _lobbyManager.Init(lobbyManagerSettings);
     }
 }

@@ -1375,7 +1375,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6102017300659231063}
-        m_TargetAssemblyTypeName: SessionListUiHandler, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListViewController, UnityMultiV2.Runtime
         m_MethodName: OnPasswordUpdated
         m_Mode: 0
         m_Arguments:
@@ -2793,7 +2793,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6102017300659231063}
-        m_TargetAssemblyTypeName: SessionListUiHandler, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListViewController, UnityMultiV2.Runtime
         m_MethodName: OnInputUpdated
         m_Mode: 0
         m_Arguments:
@@ -5017,7 +5017,7 @@ GameObject:
   - component: {fileID: 7151732534674852576}
   - component: {fileID: 1408260178429276184}
   m_Layer: 5
-  m_Name: ErrorHandlerUi
+  m_Name: ErrorMessagePresenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5207,7 +5207,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6102017300659231063}
-        m_TargetAssemblyTypeName: SessionListUiHandler, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListViewController, UnityMultiV2.Runtime
         m_MethodName: OnJoinRandomPressed
         m_Mode: 1
         m_Arguments:
@@ -5229,7 +5229,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 6222643542273113330}
   scaleTarget: {fileID: 5129386547635451178}
   hoverTextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -7082,7 +7082,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6102017300659231063}
-        m_TargetAssemblyTypeName: SessionListUiHandler, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListViewController, UnityMultiV2.Runtime
         m_MethodName: OnJoinLobbyPressed
         m_Mode: 1
         m_Arguments:
@@ -7104,7 +7104,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 6778537257367652735}
   scaleTarget: {fileID: 8018775372569137992}
   hoverTextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -7236,7 +7236,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6102017300659231063}
-        m_TargetAssemblyTypeName: SessionListUiHandler, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListViewController, UnityMultiV2.Runtime
         m_MethodName: HostStartGame
         m_Mode: 1
         m_Arguments:
@@ -7258,7 +7258,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 4992018558828374434}
   scaleTarget: {fileID: 3107082647139521176}
   hoverTextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -7527,7 +7527,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6102017300659231063}
-        m_TargetAssemblyTypeName: SessionListUiHandler, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListViewController, UnityMultiV2.Runtime
         m_MethodName: LeaveSession
         m_Mode: 1
         m_Arguments:
@@ -7549,7 +7549,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 470044447787134247}
   scaleTarget: {fileID: 5521727732937666266}
   hoverTextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -8968,7 +8968,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 4040465410550044351}
   scaleTarget: {fileID: 3521089192588258221}
   hoverTextColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
@@ -9250,7 +9250,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6102017300659231063}
-        m_TargetAssemblyTypeName: SessionListUiHandler, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListViewController, UnityMultiV2.Runtime
         m_MethodName: OnCreatePressed
         m_Mode: 1
         m_Arguments:
@@ -9272,7 +9272,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 2244034924880089649}
   scaleTarget: {fileID: 8475821836346480202}
   hoverTextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -9875,7 +9875,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 7916341071349146601}
   scaleTarget: {fileID: 6598963159924973606}
   hoverTextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -10289,7 +10289,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 5725228302005052343}
   scaleTarget: {fileID: 4559405192807876836}
   hoverTextColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
@@ -11946,7 +11946,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 5637429891165759456}
   scaleTarget: {fileID: 2196744189248124978}
   hoverTextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -12303,7 +12303,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 1706903326507225907}
   scaleTarget: {fileID: 3656302787312824882}
   hoverTextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -13919,7 +13919,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6102017300659231063}
-        m_TargetAssemblyTypeName: SessionListUiHandler, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListViewController, UnityMultiV2.Runtime
         m_MethodName: OnNicknameUpdated
         m_Mode: 0
         m_Arguments:
@@ -14074,7 +14074,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6102017300659231063}
-        m_TargetAssemblyTypeName: SessionListUiHandler, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListViewController, UnityMultiV2.Runtime
         m_MethodName: LeaveSession
         m_Mode: 1
         m_Arguments:
@@ -14096,7 +14096,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53190cf8db2e4eb4d903c421fc593dd2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverTextScale
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::ButtonHoverTextScale
   labelText: {fileID: 5397595982416686108}
   scaleTarget: {fileID: 5056736110503844866}
   hoverTextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -16687,7 +16687,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6102017300659231063}
-        m_TargetAssemblyTypeName: SessionListUiHandler, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListViewController, UnityMultiV2.Runtime
         m_MethodName: OnNicknameUpdated
         m_Mode: 0
         m_Arguments:
@@ -16913,7 +16913,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6102017300659231063}
-        m_TargetAssemblyTypeName: SessionListUiHandler, Assembly-CSharp
+        m_TargetAssemblyTypeName: SessionListViewController, UnityMultiV2.Runtime
         m_MethodName: OnPasswordUpdated
         m_Mode: 0
         m_Arguments:

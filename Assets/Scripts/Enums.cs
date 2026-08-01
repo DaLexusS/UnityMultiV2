@@ -1,5 +1,6 @@
-public enum SFX {
-    UI_Hover,
-    UI_Click,
+public enum Sfx
+{
+    UIHover,
+    UIClick
 }
 

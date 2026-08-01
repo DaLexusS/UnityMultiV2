@@ -3,12 +3,12 @@ using UnityEngine.Events;
 
 public class LobbyItemHandler : MonoBehaviour
 {
-    public static UnityAction<string> onLobbyJoined;
+    public static event UnityAction<string> LobbyJoinRequested;
 
-    public string lobbyId;
+    [SerializeField] private string lobbyId;
 
     public void Join()
     {
-        onLobbyJoined.Invoke(lobbyId);
+        LobbyJoinRequested.Invoke(lobbyId);
     }
 }

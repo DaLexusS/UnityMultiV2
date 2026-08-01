@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class PlayerDataUi : MonoBehaviour
+public class LobbyPlayerRowView : MonoBehaviour
 {
     [SerializeField] private TMP_Text playerNameText;
     [SerializeField] private GameObject hostIndicator;
@@ -12,7 +12,7 @@ public class PlayerDataUi : MonoBehaviour
 
     private PlayerRef _player;
 
-    public UnityAction<PlayerRef> onKickRequested;
+    public event UnityAction<PlayerRef> KickRequested;
 
     private void Awake()
     {
@@ -42,6 +42,6 @@ public class PlayerDataUi : MonoBehaviour
 
     private void OnKickPressed()
     {
-        onKickRequested?.Invoke(_player);
+        KickRequested?.Invoke(_player);
     }
 }

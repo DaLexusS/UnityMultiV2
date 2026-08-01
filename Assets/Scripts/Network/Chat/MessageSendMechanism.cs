@@ -14,13 +14,12 @@ public class MessageSendMechanism : MonoBehaviour
     {
         if (ChatManager.Instance == null)
         {
-            ErrorHandlerUi.ReportError("Chat manager is not ready yet.");
+            ErrorMessagePresenter.ShowError("Chat manager is not ready yet.");
             return;
         }
 
         PlayerRef target = _targetPlayerDropdown.TargetPlayer;
-        PlayerRef sender = networkRunner.LocalPlayer;
-        
-        ChatManager.Instance.RPC_SendMessageToServer(sender, target , field.text);
+        ChatManager.Instance.RPC_SendMessageToServer(target, field.text);
+        field.text = string.Empty;
     }
 }

@@ -101,4 +101,4 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b2762d4258655a4c834f6dae31fe15b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SkinAnimatorEventer
+  m_EditorClassIdentifier: UnityMultiV2.Runtime::SkinAnimatorEventer
